@@ -1,18 +1,20 @@
 ---
 layout: page
-title: "Welcome to Portworx Docs"
-keywords: portworx, px-enterprise, px-developer, containers, storage
+title: Welcome to Portworx Docs
+keywords: 'portworx, px-enterprise, px-developer, containers, storage'
 sidebar: home_sidebar
-youtubeId : 0zTjOly0vkA
+youtubeId: 0zTjOly0vkA
 ---
 
+# index
+
 * TOC
-{:toc}
 
-<a href="https://github.com/portworx/px-docs"><img class="topfork" width="149px" height="149px" src="/images/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+  {:toc}
 
-Portworx is a software defined persistent storage solution designed and purpose built for containers.  Portworx is a clustered block storage solution that provides a Cloud-Native layer from which containerized stateful applications programmatically consume storage services directly through schedulers such as Kubernetes, Mesos and Swarm.
-Portworx storage is delivered as a container that gets installed on your servers that run stateful applications. 
+![Fork me on GitHub](.gitbook/assets/forkme_right_orange_ff7600.png)
+
+Portworx is a software defined persistent storage solution designed and purpose built for containers. Portworx is a clustered block storage solution that provides a Cloud-Native layer from which containerized stateful applications programmatically consume storage services directly through schedulers such as Kubernetes, Mesos and Swarm. Portworx storage is delivered as a container that gets installed on your servers that run stateful applications.
 
 Portworx technology:
 
@@ -24,18 +26,16 @@ Portworx technology:
 * Is radically simple - Portworx is deployed just like any other container - and managed by your scheduler of choice.
 
 ## Data Service Platform
-Here is a short video that shows how Portworx provides an entire platform of services for managing stateful containerized applications in any Cloud or On-Prem data center:
-{% include youtubePlayer.html id=page.youtubeId %}
 
-Portworx storage is deployed as a container and runs on a cluster of servers. Application containers provision storage directly through the Docker [volume plugins](https://docs.docker.com/engine/extend/plugins_volume/#command-line-changes:be52bcf493d28afffae069f235814e9f) API or the Docker [command-line](https://docs.docker.com/engine/extend/plugins_volume/#command-line-changes:be52bcf493d28afffae069f235814e9f). Administrators and DevOps can alternatively pre-provision storage through the Portworx command-line tool (**pxctl**) and then set storage policies using the PX-Enterprise web console.
+Here is a short video that shows how Portworx provides an entire platform of services for managing stateful containerized applications in any Cloud or On-Prem data center:
+
+Portworx storage is deployed as a container and runs on a cluster of servers. Application containers provision storage directly through the Docker [volume plugins](https://docs.docker.com/engine/extend/plugins_volume/#command-line-changes:be52bcf493d28afffae069f235814e9f) API or the Docker [command-line](https://docs.docker.com/engine/extend/plugins_volume/#command-line-changes:be52bcf493d28afffae069f235814e9f). Administrators and DevOps can alternatively pre-provision storage through the Portworx command-line tool \(**pxctl**\) and then set storage policies using the PX-Enterprise web console.
 
 Portworx storage runs in a cluster of server nodes.
 
-Each server has the Portworx container and the Docker daemon.
-Servers join a cluster and share configuration through PX-Enterprise or the key/value store, such as etcd.
-The Portworx container pools the capacity of the storage media residing on the server.
+Each server has the Portworx container and the Docker daemon. Servers join a cluster and share configuration through PX-Enterprise or the key/value store, such as etcd. The Portworx container pools the capacity of the storage media residing on the server.
 
-![Portworx cluster architecture](/images/cluster-architecture.png "Portworx cluster architecture"){:width="442px" height="492px"}
+![Portworx cluster architecture](.gitbook/assets/cluster-architecture.png){:width="442px" height="492px"}
 
 Storage volumes are thinly provisioned, using capacity only as an application consumes it. Volumes are replicated across the nodes within the cluster, per a volume’s configuration, to ensure high availability.
 
@@ -45,9 +45,9 @@ Using MySQL as an example, a Portworx storage cluster has the following characte
 * This data gets stored in the container’s volume, managed by Portworx.
 * Portworx synchronously and automatically replicates writes to the volume across the cluster.
 
-![Portworx cluster architecture with MySQL](/images/cluster-architecture-example-mysql.png "Portworx cluster architecture with MySQL"){:width="839px" height="276px"}
+![Portworx cluster architecture with MySQL](.gitbook/assets/cluster-architecture-example-mysql.png){:width="839px" height="276px"}
 
-Each volume specifies its request of resources (such as its max capacity and IOPS) and its individual requirements (such as ext4 as the file system and block size).
+Each volume specifies its request of resources \(such as its max capacity and IOPS\) and its individual requirements \(such as ext4 as the file system and block size\).
 
 Using IOPS as an example, a team can choose to set the MySQL container to have a higher IOPS than an offline batch processing container. Thus, a container scheduler can move containers, without losing storage and while protecting the user experience.
 
@@ -74,14 +74,17 @@ Using IOPS as an example, a team can choose to set the MySQL container to have a
   * Ports 9001 - 9004 must be open for internal network traffic between nodes running PX
 
 ## Install
+
 Visit the Schedulers section of this documentation, and chose the appropriate installation instructions for your scheduler.
 
-* [Install on Kubernetes](/scheduler/kubernetes/install.html)
-* [Install on Mesosphere DCOS](/scheduler/mesosphere-dcos/install.html)
-* [Install on Docker](/scheduler/docker/install.html)
-* [Install on Rancher](/scheduler/rancher/install.html)
+* [Install on Kubernetes](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/kubernetes/install.html)
+* [Install on Mesosphere DCOS](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/mesosphere-dcos/install.html)
+* [Install on Docker](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/docker/install.html)
+* [Install on Rancher](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/rancher/install.html)
 
 ## Join us on Slack!
-[![](/images/slack.png){:height="48px" width="48px" .slack-icon}](http://slack.portworx.com)
+
+[![](.gitbook/assets/slack.png){:height="48px" width="48px" .slack-icon}](http://slack.portworx.com)
 
 [Contact us](http://portworx.com/contact-us/) to share feedback, work with us, and to request features.
+

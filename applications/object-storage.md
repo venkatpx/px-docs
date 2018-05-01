@@ -1,46 +1,48 @@
 ---
 layout: page
-title: "Object Storage with Portworx"
-keywords: portworx, minio, object, cluster, storage
+title: Object Storage with Portworx
+keywords: 'portworx, minio, object, cluster, storage'
 sidebar: home_sidebar
-redirect_from: "/object-storage.html"
+redirect_from: /object-storage.html
 ---
 
+# object-storage
+
 * TOC
-{:toc}
+
+  {:toc}
 
 [Minio](http://minio.io) is a distributed object storage server built for cloud applications and devops.
 
-Portworx perfectly compliments Minio object storage by providing an elastic, scalable, 
-container-granular data services fabric underneath the Minio object storage server.
+Portworx perfectly compliments Minio object storage by providing an elastic, scalable, container-granular data services fabric underneath the Minio object storage server.
 
-Minio object storage perfectly compliments Portworx by providing a simple object storage 
-service layer on top of Portworx data services.
+Minio object storage perfectly compliments Portworx by providing a simple object storage service layer on top of Portworx data services.
 
 Both products complement each other with their stunning simplicity.
 
 ## Create Portworx Persistent Volumes
-Minio requires 2 volumes:  one for configuration meta-data, and one for user data.
-For example:
 
-```
+Minio requires 2 volumes: one for configuration meta-data, and one for user data. For example:
+
+```text
 docker volume create -d pxd --name minio-config --opt size=30G --opt repl=3
 docker volume create -d pxd --name minio-export --opt size=30G --opt repl=3
 ```
 
 ## Launch Minio Object Storage Server
+
 To run the Minio Object Storage Server with the Portworx persistent volumes created above:
 
-```
+```text
 docker run -p 9000:9000 --name minio1 -d \
   -v minio-export:/export \
   -v minio-config:/root/.minio \
-  minio/minio server /export 
+  minio/minio server /export
 ```
 
 To view the Access Keys needed by the client, view the "docker logs":
 
-```
+```text
 Endpoint:  http://172.17.0.2:9000  http://127.0.0.1:9000
 AccessKey: TPHTH75X6KTQLH6X9Y58
 SecretKey: laAfBKWwhI6m+sON4dQcvA5USWoLMDscWXec7c5H
@@ -62,6 +64,5 @@ Object API (Amazon S3 compatible):
 Drive Capacity: 28 GiB Free, 29 GiB Total
 ```
 
-The Minio Object Storage Server can then be easily accessed via the CLI, API or Browser.
-See [http://docs.minio.io](http://docs.minio.io/) for further reference.
+The Minio Object Storage Server can then be easily accessed via the CLI, API or Browser. See [http://docs.minio.io](http://docs.minio.io/) for further reference.
 

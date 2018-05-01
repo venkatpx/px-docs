@@ -1,18 +1,24 @@
 ---
 layout: page
-title: "Creating a PVC from a Snapshot"
-keywords: portworx, container, Kubernetes, storage, Docker, k8s, flexvol, pv, persistent disk, snapshots
+title: Creating a PVC from a Snapshot
+keywords: >-
+  portworx, container, Kubernetes, storage, Docker, k8s, flexvol, pv, persistent
+  disk, snapshots
 sidebar: home_sidebar
 ---
 
-This document will show you how to take a snapshot of a volume using Portworx and use that snapshot as the volume for a new pod.  It uses MySQL as an example. 
+# snaps
+
+This document will show you how to take a snapshot of a volume using Portworx and use that snapshot as the volume for a new pod. It uses MySQL as an example.
 
 This feature is available in a future release of PX-Enterprise. Please reach out to support@portworx.com if you would like to have a private beta of this feature
 
 ## Managing snapshots through `kubectl`
 
 ### Taking periodic snapshots on a running POD
+
 When you create the Storage Class, you can specify a snapshot schedule on the volume as specified below:
+
 ```yaml
     kind: StorageClass
      apiVersion: storage.k8s.io/v1beta1
@@ -26,6 +32,7 @@ When you create the Storage Class, you can specify a snapshot schedule on the vo
 ```
 
 ### Creating a snapshot on demand
+
 You can also trigger a new snapshot on a runnig POD by creating a PersitentVolumeClaim as specified in the following `snap.yaml`:
 
 ```yaml
@@ -41,18 +48,20 @@ kind: PersistentVolumeClaim
            storage: 100Gi
 ```
 
-Note the format of the “name” field.  The format is `name.<new_volume_name>-source.<old_volume_name>`.  This references the parent (source) persistent volume claim.
+Note the format of the “name” field. The format is `name.<new_volume_name>-source.<old_volume_name>`. This references the parent \(source\) persistent volume claim.
 
-Now run: 
-```
+Now run:
+
+```text
 # kubectl create -f snap.yaml
 ```
 
 ### Start a new POD or StatefulSet from a snapshot taken on demand
-Similar to the section above, you can also create a POD or a StatefulSet from a PVC that references another PVC with the “source” parameter.  Doing so will create a new POD or StatefulSet that resumes the application from a snapshot of the current volume.
-Rolling a POD or StatefulSet back  to an existing or previously taken snapshot.
+
+Similar to the section above, you can also create a POD or a StatefulSet from a PVC that references another PVC with the “source” parameter. Doing so will create a new POD or StatefulSet that resumes the application from a snapshot of the current volume. Rolling a POD or StatefulSet back to an existing or previously taken snapshot.
 
 ### Rolling a POD back to a snapshot
+
 To rollback a POD or a StatefulSet back to a previous snapshot, create a new Persistent Volume Claim as follows:
 
 ```yaml
@@ -65,18 +74,18 @@ kind: PersistentVolumeClaim
      spec:
        resources:
          requests:
-           storage: 100Gi   
+           storage: 100Gi
 ```
 
-Note the format of the “name” field.  The format is `name.<new_volume_name>-source.<snap_name>`.  This references a previous snapshot.  Now when you create a POD or a StatefulSet from this PVC, it will resume the application from a rolled back version.
-You can also create a POD or a StatefulSet that directly references a PV created from a snapshot via kubectl.
+Note the format of the “name” field. The format is `name.<new_volume_name>-source.<snap_name>`. This references a previous snapshot. Now when you create a POD or a StatefulSet from this PVC, it will resume the application from a rolled back version. You can also create a POD or a StatefulSet that directly references a PV created from a snapshot via kubectl.
 
 ## Managing snapshots through `pxctl`
 
 To demonstrate the capabilities of the SAN like functionality offered by portworx, try creating a snapshot of your mysql volume.
 
 First create a database and a demo table in your mysql container.
-````
+
+```text
 # mysql --user=root --password=password
 MySQL [(none)]> create database pxdemo;
 Query OK, 1 row affected (0.00 sec)
@@ -86,35 +95,42 @@ MySQL [pxdemo]> create table grapevine (counter int unsigned);
 Query OK, 0 rows affected (0.04 sec)
 MySQL [pxdemo]> quit;
 Bye
-````
+```
+
 ### Now create a snapshot of this database using pxctl.
 
 First use pxctl volume list to see what volume you want to snapshot
-````
+
+```text
 # /opt/pwx/bin/pxctl v l
-ID					NAME										SIZE	HA	SHARED	ENCRYPTED	IO_PRIORITY	SCALE	STATUS
-381983511213673988	pvc-e7e66f98-0915-11e7-94ca-7cd30ac1a138	20 GiB	2	no		no			LOW			0		up - attached on 147.75.105.241
-````
+ID                    NAME                                        SIZE    HA    SHARED    ENCRYPTED    IO_PRIORITY    SCALE    STATUS
+381983511213673988    pvc-e7e66f98-0915-11e7-94ca-7cd30ac1a138    20 GiB    2    no        no            LOW            0        up - attached on 147.75.105.241
+```
+
 Then use pxctl to snapshot your volume
-````
+
+```text
 /opt/pwx/bin/pxctl snap create 381983511213673988 --name snap-01
 Volume successfully snapped: 835956864616765999
-````
+```
 
 You can use pxctl to see your snapshot
-````
+
+```text
 # /opt/pwx/bin/pxctl snap list
-ID					NAME	SIZE	HA	SHARED	ENCRYPTED	IO_PRIORITY	SCALE	STATUS
-835956864616765999	snap-01	20 GiB	2	no		no			LOW			0		up - detached
-````
+ID                    NAME    SIZE    HA    SHARED    ENCRYPTED    IO_PRIORITY    SCALE    STATUS
+835956864616765999    snap-01    20 GiB    2    no        no            LOW            0        up - detached
+```
 
 Now you can create a mysql Pod to mount the snapshot
 
-````
+```text
 kubectl create -f portworx-mysql-snap-pod.yaml
-````
-[Download example](/k8s-samples/portworx-mysql-snap-pod.yaml?raw=true)
-````
+```
+
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-mysql-snap-pod.yaml?raw=true)
+
+```text
 apiVersion: v1
 kind: Pod
 metadata:
@@ -138,10 +154,11 @@ spec:
     # This Portworx volume must already exist.
     portworxVolume:
       volumeID: "vol1"
-````
+```
+
 Inspect that the database shows the cloned tables in the new mysql instance.
 
-````
+```text
 # mysql --user=root --password=password
 mysql> show databases;
 +--------------------+
@@ -166,5 +183,5 @@ mysql> show tables;
 | grapevine        |
 +------------------+
 1 row in set (0.00 sec)
+```
 
-````

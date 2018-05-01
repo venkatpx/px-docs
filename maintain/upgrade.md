@@ -1,17 +1,16 @@
 ---
 layout: page
-title: "Upgrade Portworx"
+title: Upgrade Portworx
 keywords: upgrade
 sidebar: home_sidebar
-redirect_from: "/upgrade.html"
+redirect_from: /upgrade.html
 ---
 
-## Upgrading Portworx 
+# Upgrading Portworx
 
-Upgrading Portworx Enterprise is performed as a rolling upgrade.
-On each node in the cluster , please execute **'pxctl upgrade'** command as shown below.
+Upgrading Portworx Enterprise is performed as a rolling upgrade. On each node in the cluster , please execute **'pxctl upgrade'** command as shown below.
 
-```
+```text
 [root@PX-SM2 ~]# pxctl upgrade px-enterprise
 Upgrading px-enterprise to the latest version
 Downloading latest PX enterprise layers...

@@ -1,56 +1,60 @@
 ---
 layout: page
-title: "Class of Service"
-keywords: portworx, cos, class of service, production
+title: Class of Service
+keywords: 'portworx, cos, class of service, production'
 sidebar: home_sidebar
-redirect_from: "/cos.html"
+redirect_from: /cos.html
 ---
 
-* TOC
-{:toc}
+# class-of-service
 
-Through class of service (also known as a `CoS`), a single volume's class of service can be controlled and mapped to specific underlying storage infrastructure capabilities.
+* TOC
+
+  {:toc}
+
+Through class of service \(also known as a `CoS`\), a single volume's class of service can be controlled and mapped to specific underlying storage infrastructure capabilities.
 
 ## Explanation of Class of Service
 
-Applications have different storage performance requirements; some require higher IOPS/throughput performance characteristics than others. Portworx provides the ability to specify a class of service level at the container granularity. Containers operating at different classes of service can co-exist in the same node/cluster.  Using class of service you can tune your volume for higher throughput and/or IOPS. The *High* CoS is optimized for IOPS, *Medium* is optimized for throughput.
+Applications have different storage performance requirements; some require higher IOPS/throughput performance characteristics than others. Portworx provides the ability to specify a class of service level at the container granularity. Containers operating at different classes of service can co-exist in the same node/cluster. Using class of service you can tune your volume for higher throughput and/or IOPS. The _High_ CoS is optimized for IOPS, _Medium_ is optimized for throughput.
 
 ## Usage
-To create a volume with a specific class of service level, use the `--io_prioirity` parameter in the volume create options.  As with other parameters, this CoS parameter can also be passed in as a label via Docker or any scheduler.
 
-```
+To create a volume with a specific class of service level, use the `--io_prioirity` parameter in the volume create options. As with other parameters, this CoS parameter can also be passed in as a label via Docker or any scheduler.
+
+```text
 # /opt/pwx/bin/pxctl volume create --io_priority high volume-name
 ```
 
 Here is an example output from [fio](https://github.com/axboe/fio) when measuring the CoS feature on an Intel server with NVMe and SATA drives.
 
-| Random   	| Low CoS IOPS	| High CoS IOPS 	|
-| 4K 	  	| 768         	| 65024				|
-| 8K    	| 642         	| 46848     		|
-| 64K    	| 496         	| 9824     			|
+\| Random \| Low CoS IOPS \| High CoS IOPS \| \| 4K \| 768 \| 65024 \| \| 8K \| 642 \| 46848 \| \| 64K \| 496 \| 9824 \|
 
 The graph below shows the sequential and random read and write performance on high and low CoS volume types:
 
 ### Random Read and Writes
-![CoS Random](/images/cos-random.png){:width="2230px" height="726px"}
+
+![CoS Random](../.gitbook/assets/cos-random.png){:width="2230px" height="726px"}
 
 ### Sequential Read and Writes
-![CoS Sequential](/images/cos-seq.png){:width="1204px" height="376px"}
+
+![CoS Sequential](../.gitbook/assets/cos-seq.png){:width="1204px" height="376px"}
 
 ## Try it out on Amazon
 
 ### Create EBS volumes AWS
-Here, we create volumes of 3 different volume types in AWS.  Refer to [AWS EBS volume types](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html) for more information on the EBS volume capabilities.  PWX will automatically detect the volume type and classify it into the correct service category.
+
+Here, we create volumes of 3 different volume types in AWS. Refer to [AWS EBS volume types](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html) for more information on the EBS volume capabilities. PWX will automatically detect the volume type and classify it into the correct service category.
 
 * Create one 500GB HDD volume
 * Create one 100GB standard volume
 * Create one 1000GB IO optimized volume
 
-![EBS Volumes](/images/cos.png){:width="1004px" height="246px"}
+![EBS Volumes](../.gitbook/assets/cos.png){:width="1004px" height="246px"}
 
 Here is what you should see when you list your block devices:
 
-```
+```text
 # lsblk
 NAME                                                    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 xvda                                                    202:0    0   64G  0 disk
@@ -62,14 +66,14 @@ xvdn                                                    202:208  0  999G  0 disk
 
 Create a `config.json` with the following drives in it... we will add the fourth standard ebs volume later
 
-```
+```text
 # cat /etc/pwx/config.json
 {
     "alertingurl": "",
     "clusterid": "cos-demo-cluster",
     "dataiface": "",
     "kvdb": [
-    	"etcd://localhost:4001"
+        "etcd://localhost:4001"
     ],
     "mgtiface": "",
     "storage": {
@@ -82,7 +86,7 @@ Create a `config.json` with the following drives in it... we will add the fourth
 }
 ```
 
-```
+```text
 # pxctl status
 Status: PX is operational
 Node ID: 5f794df0-b337-42d7-afc0-440c19fc4b0e
@@ -106,42 +110,41 @@ Global Storage Pool
         Total Capacity  :  1.6 TiB
 ```
 
-The `status` command on any node shows the pools with different classes of services listed.  The format `x:y` in the Device column indicates the `pool:device` participating in that pool.
-
-
+The `status` command on any node shows the pools with different classes of services listed. The format `x:y` in the Device column indicates the `pool:device` participating in that pool.
 
 ### Inspect different pools
 
-```
+```text
 # /opt/pwx/bin/pxctl service drives
 PX drive configuration:
 Pool ID: 0
-	Cos: COS_TYPE_LOW
-	Size: 500 GiB
-	Status: Online
-	Has meta data: No
-	Drives:
-	1: /dev/xvdl, 4.1 GiB allocated of 500 GiB, Online
+    Cos: COS_TYPE_LOW
+    Size: 500 GiB
+    Status: Online
+    Has meta data: No
+    Drives:
+    1: /dev/xvdl, 4.1 GiB allocated of 500 GiB, Online
 Pool ID: 1
-	Cos: COS_TYPE_HIGH
-	Size: 991 GiB
-	Status: Online
-	Has meta data: No
-	Drives:
-	1: /dev/xvdn, 2.1 GiB allocated of 991 GiB, Online
+    Cos: COS_TYPE_HIGH
+    Size: 991 GiB
+    Status: Online
+    Has meta data: No
+    Drives:
+    1: /dev/xvdn, 2.1 GiB allocated of 991 GiB, Online
 Pool ID: 2
-	Cos: COS_TYPE_MEDIUM
-	Size: 128 GiB
-	Status: Online
-	Has meta data: Yes
-	Drives:
-	1: /dev/xvdj, 2.1 GiB allocated of 128 GiB, Online
+    Cos: COS_TYPE_MEDIUM
+    Size: 128 GiB
+    Status: Online
+    Has meta data: Yes
+    Drives:
+    1: /dev/xvdj, 2.1 GiB allocated of 128 GiB, Online
 ```
 
 ### Measure Performance
+
 Let's first create three volumes with a high, medium and low class of service:
 
-```
+```text
 # /opt/pwx/bin/pxctl volume create --io_priority high test-high --size 8
 test-high
 # /opt/pwx/bin/pxctl volume create --io_priority med test-med --size 8
@@ -150,10 +153,9 @@ test-med
 test-low
 ```
 
-Now we use [fio](https://github.com/axboe/fio) to measure PX volume performance on each of these volumes. 
-Note that backend disk performance while performance tests are running can be visualized with iostat
+Now we use [fio](https://github.com/axboe/fio) to measure PX volume performance on each of these volumes. Note that backend disk performance while performance tests are running can be visualized with iostat
 
-```
+```text
 # iostat -xm 1
 
 Device:         rrqm/s   wrqm/s     r/s     w/s    rMB/s    wMB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
@@ -164,18 +166,18 @@ xvdn              0.00     0.00    0.00    0.00     0.00     0.00     0.00     0
 
 #### Test a high CoS volume on EBS
 
-```
+```text
 # docker run --rm --volume-driver=pxd -v test-high:/test          \
-	gourao/fio /usr/bin/fio --blocksize=16k -directory=/test      \
-	--filename=test --ioengine=libaio --readwrite=randrw          \
-	--size=1G --name=test --verify=meta --do_verify=1             \
-	--verify_pattern=0xDeadBeef --direct=1 --gtod_reduce=1        \
-	--iodepth=128 --randrepeat=1  --end_fsync=1
+    gourao/fio /usr/bin/fio --blocksize=16k -directory=/test      \
+    --filename=test --ioengine=libaio --readwrite=randrw          \
+    --size=1G --name=test --verify=meta --do_verify=1             \
+    --verify_pattern=0xDeadBeef --direct=1 --gtod_reduce=1        \
+    --iodepth=128 --randrepeat=1  --end_fsync=1
 ```
 
 Results:
 
-```
+```text
 test: (g=0): rw=randread, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=128
 fio-2.1.11
 Starting 1 process
@@ -198,17 +200,17 @@ Disk stats (read/write):
 
 #### Test a medium CoS volume on EBS
 
-```
+```text
 # docker run --rm --volume-driver=pxd -v test-med:/test            \
-	gourao/fio /usr/bin/fio --blocksize=16k -directory=/test       \
-	--filename=test --ioengine=libaio --readwrite=randrw           \
-	--size=4G --name=test --direct=1 --gtod_reduce=1               \
-	--iodepth=128 --randrepeat=1  --end_fsync=1
+    gourao/fio /usr/bin/fio --blocksize=16k -directory=/test       \
+    --filename=test --ioengine=libaio --readwrite=randrw           \
+    --size=4G --name=test --direct=1 --gtod_reduce=1               \
+    --iodepth=128 --randrepeat=1  --end_fsync=1
 ```
 
 Results:
 
-```
+```text
 test: (g=0): rw=randread, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=128
 fio-2.1.11
 Starting 1 process
@@ -231,17 +233,17 @@ Disk stats (read/write):
 
 #### Test a low CoS volume on EBS
 
-```
+```text
 # docker run --rm --volume-driver=pxd -v test-low:/test           \
-	gourao/fio /usr/bin/fio --blocksize=4k -directory=/test       \
-	--filename=test --ioengine=libaio --readwrite=randrw          \
-	--size=1G --name=test --direct=1 --gtod_reduce=1              \
-	--iodepth=128 --randrepeat=1  --end_fsync=1
+    gourao/fio /usr/bin/fio --blocksize=4k -directory=/test       \
+    --filename=test --ioengine=libaio --readwrite=randrw          \
+    --size=1G --name=test --direct=1 --gtod_reduce=1              \
+    --iodepth=128 --randrepeat=1  --end_fsync=1
 ```
 
 Results:
 
-```
+```text
 test: (g=0): rw=randread, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=128
 fio-2.1.11
 Starting 1 process
@@ -262,9 +264,7 @@ Disk stats (read/write):
   pxd!pxd660995725854051776: ios=260024/5, merge=0/2, ticks=376295185/22319, in_queue=376318258, util=100.00%
 ```
 
-### Summary of AWS Results (4K Random Reads)
+### Summary of AWS Results \(4K Random Reads\)
 
-| CoS    	| Avg IOPS 		| Avg Response Time |
-| High   	| 10346			| 0.58ms 	  	   	|
-| Medium 	| 5783     		| 0.54ms       		|
-| Low    	| 89			| 23.61ms      		|
+\| CoS \| Avg IOPS \| Avg Response Time \| \| High \| 10346 \| 0.58ms \| \| Medium \| 5783 \| 0.54ms \| \| Low \| 89 \| 23.61ms \|
+

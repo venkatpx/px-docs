@@ -1,16 +1,22 @@
 ---
 layout: page
-title: "Run your own etcd server"
-keywords: portworx, px-developer, px-enterprise, install, configure, container, storage, add nodes
+title: Run your own etcd server
+keywords: >-
+  portworx, px-developer, px-enterprise, install, configure, container, storage,
+  add nodes
 sidebar: home_sidebar
 ---
 
+# run-etcd
+
 Portworx recommends running **etcd** in a container
 
-```
+```text
 export HostIP="YOUR IP ADDRESS"
-````
-````
+`
+```
+
+```text
 docker run --net=host \
    -d --name etcd-v3.1.3 \
    --volume=/tmp/etcd-data:/etcd-data \
@@ -34,15 +40,18 @@ Note that the etcd port is 2379.
 
 For complete instructions, please visit the [Etcd installation documentation](https://coreos.com/etcd/docs/latest/v2/docker_guide.html)
 
-### Compose.io
+## Compose.io
+
 You can use an existing etcd service or set up your own. This example uses Compose.IO, for its ease of use.
 
 1. Create a new etcd deployment in Compose.IO.
 2. Select 256 MB RAM as the memory.
 3. Save the connection string, including your username and password. For example:
 
- https://[username]:[password]@[string].dblayer.com:[port]
+   [https://\[username\]:\[password\]@\[string\].dblayer.com:\[port](https://[username]:[password]@[string].dblayer.com:[port)\]
 
- >**Important:**<br/>If you are using Compose.IO and the `kvdb` string ends with `[port]/v2/keys`, omit the `/v2/keys`. Before running the container, make sure you have saved off any data on the storage devices specified in the configuration.
+   > **Important:**  
+   > If you are using Compose.IO and the `kvdb` string ends with `[port]/v2/keys`, omit the `/v2/keys`. Before running the container, make sure you have saved off any data on the storage devices specified in the configuration.
 
 After you set up etcd, you can use the same etcd service for multiple PX clusters.
+

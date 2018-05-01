@@ -1,16 +1,17 @@
 ---
 layout: page
-title: "Deploy Portworx on Mesosphere DCOS"
-keywords: portworx, mesos, mesosphere, dcos
+title: Deploy Portworx on Mesosphere DCOS
+keywords: 'portworx, mesos, mesosphere, dcos'
 sidebar: home_sidebar
 ---
 
-[Mesosphere DC/OS](https://mesosphere.com/product/) makes it easy to build and run modern distributed applications in production at scale, by pooling resources across an entire datacenter or
-cloud. 
+# index
+
+[Mesosphere DC/OS](https://mesosphere.com/product/) makes it easy to build and run modern distributed applications in production at scale, by pooling resources across an entire datacenter or cloud.
 
 While the DC/OS platform works great for stateless applications, many enterprises who have tried to use DC/OS for stateful applications at scale have stumbled when it comes to using the platform for services like databases, queues and key-value stores.
 
-Portworx, which scales up to 1000 nodes per cluster and is used in production by DC/OS users like GE Digital, solves the operational and data management problems enterprises encounter when running stateful applications on DC/OS. 
+Portworx, which scales up to 1000 nodes per cluster and is used in production by DC/OS users like GE Digital, solves the operational and data management problems enterprises encounter when running stateful applications on DC/OS.
 
 Unlike the default DC/OS volume driver, Portworx lets you:
 
@@ -25,6 +26,7 @@ Read on for how to install Portworx into your DC/OS cluster and use it with [DC/
 
 ## Using Portworx with Mesosphere DCOS
 
- * [Install Portworx for Mesosphere/DCOS](/scheduler/mesosphere-dcos/install.html)
- * [Cassandra on DCOS with Portworx](/scheduler/mesosphere-dcos/cassandra.html)
- * [Hadoop on DCOS with Portworx](/scheduler/mesosphere-dcos/hadoop-hdfs.html)
+* [Install Portworx for Mesosphere/DCOS](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/mesosphere-dcos/install.html)
+* [Cassandra on DCOS with Portworx](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/mesosphere-dcos/cassandra.html)
+* [Hadoop on DCOS with Portworx](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/mesosphere-dcos/hadoop-hdfs.html)
+

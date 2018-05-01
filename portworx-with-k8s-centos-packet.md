@@ -1,27 +1,26 @@
 # Portworx with Kubernetes on CentOS with Packet.net
+
 This guide will get a Kubernetes Cluster installed with Portworx on CentOS using packet.net
 
 ## Deploy Cluster via Terraform to Packet
-Use this [Terraporx Repo](https://github.com/portworx/terraporx/tree/master/packet) to deploy 
-Portworx on CentOS on [Packet.net](https://www.packet.net/)
+
+Use this [Terraporx Repo](https://github.com/portworx/terraporx/tree/master/packet) to deploy Portworx on CentOS on [Packet.net](https://www.packet.net/)
 
 ## Install Ansible
-Think of Ansible as the "easy button" for easily installing and deploying Kubernetes.
-Steps to deploy are listed below.   Before starting, make sure you have Ansible installed
-on your **localmachine** via "yum", "apt-get", "brew", or whatever.
 
+Think of Ansible as the "easy button" for easily installing and deploying Kubernetes. Steps to deploy are listed below. Before starting, make sure you have Ansible installed on your **localmachine** via "yum", "apt-get", "brew", or whatever.
 
 ## Copy the Kubernetes Contrib Repo
 
-```
+```text
 # git clone https://github.com/kubernetes/contrib
 ```
 
 ## Copy Keys and /etc/hosts
 
-Update your /etc/hosts file with all the IPaddrs and hostnames from your cluster.   To Find:
+Update your /etc/hosts file with all the IPaddrs and hostnames from your cluster. To Find:
 
-```
+```text
 # grep network.0.address terraform.tfstate | awk '{print $2}' | sed -e 's/[",]//g'
 147.75.A.B
 147.75.C.D
@@ -31,9 +30,7 @@ Update your /etc/hosts file with all the IPaddrs and hostnames from your cluster
 
 If you have not already done so, be sure to run `ssh-keygen` to setup your public/private keys for SSH.
 
-To make sure you can login to all hosts without password prompting, run something like this command, 
-which takes as one argument the name of the remote host whose `authorized_keys` file gets appended
-with your local public key.
+To make sure you can login to all hosts without password prompting, run something like this command, which takes as one argument the name of the remote host whose `authorized_keys` file gets appended with your local public key.
 
 ```bash
 #!/bin/sh
@@ -60,27 +57,25 @@ ssh -i your_private.key root@$1 "mkdir ~/.ssh 2>/dev/null; chmod 700 ~/.ssh; ech
 echo "done!"
 ```
 
-Be sure to change the value of "your_private.key" (!)
-Run the above command in a loop for all hosts in the cluster, to enable `ssh` commands without password prompting.
+Be sure to change the value of "your\_private.key" \(!\) Run the above command in a loop for all hosts in the cluster, to enable `ssh` commands without password prompting.
 
-
-Then append `/etc/hosts` with hostname/IPs for all hosts in the cluster, and make sure it too is copied to all
-hosts in the cluster.
+Then append `/etc/hosts` with hostname/IPs for all hosts in the cluster, and make sure it too is copied to all hosts in the cluster.
 
 ## Adjust docker config on all hosts
-Terraporx automatically installs docker on all hosts, which runs in conflict with the contrib/ansible.
-For all the hosts run: `yum -y remove docker-engine docker-engine-selinux`
+
+Terraporx automatically installs docker on all hosts, which runs in conflict with the contrib/ansible. For all the hosts run: `yum -y remove docker-engine docker-engine-selinux`
 
 ## Adjust for secure API Port
-As per the [ansible README.md](https://github.com/kubernetes/contrib/blob/master/ansible/README.md#kubernetes-source-type), 
-edit `roles/kubernetes/defaults/main.yml` and set `kube_master_api_port` to `6443`
+
+As per the [ansible README.md](https://github.com/kubernetes/contrib/blob/master/ansible/README.md#kubernetes-source-type), edit `roles/kubernetes/defaults/main.yml` and set `kube_master_api_port` to `6443`
 
 ## Create the Ansible hosts 'inventory'
+
 Create the inventory file on which hosts Kubernetes will be installed, as per the [README](https://github.com/kubernetes/contrib/blob/master/ansible/README.md)
 
 ## Install Kubernetes via Ansible
 
-```
+```text
 # cd contrib/ansible/scripts
 # ./deploy-cluster.sh
 [...]
@@ -90,31 +85,30 @@ kube-node-1                : ok=94   changed=26   unreachable=0    failed=0
 kube-node-2                : ok=91   changed=26   unreachable=0    failed=0
 kube-node-3                : ok=91   changed=26   unreachable=0    failed=0
 ```
- 
-## Update Docker on all Nodes
-On all nodes, edit the file /etc/systemd/system/multi-user.target.wants/docker.service.
-Comment out or delete: `MountFlags=slave`
-Run the following:
 
-```
+## Update Docker on all Nodes
+
+On all nodes, edit the file /etc/systemd/system/multi-user.target.wants/docker.service. Comment out or delete: `MountFlags=slave` Run the following:
+
+```text
 # systemctl daemon-reload
 # systemctl restart docker
 ```
 
 ## Update Kubernetes binaries with Portworx Patches
- 
+
 **NB** : This step is only needed until [this Kubernetes PR](https://github.com/kubernetes/kubernetes/pull/39535) is merged
- 
-###  Get the Kubernetes / Portworx distro
- 
-```
+
+### Get the Kubernetes / Portworx distro
+
+```text
 # wget http://yum.portworx.com/repo/rpms/kubernetes/kubernetes-portworx.tar.gz && \
 tar xvf kubernetes-portworx.tar.gz
 ```
 
-####  Update the Master
+#### Update the Master
 
-```
+```text
 # cd kubernetes/server/bin
 # ssh root@kube-master-1 "systemctl stop kube-apiserver"
 # ssh root@kube-master-1 "systemctl stop kube-controller-manager"
@@ -124,12 +118,13 @@ tar xvf kubernetes-portworx.tar.gz
 
 Make sure the API server is listening on port 6443:
 
-```
+```text
 # grep KUBE_API_PORT /etc/kubernetes/apiserver
 ```
+
 should show `KUBE_API_PORT="--secure-port=6443"`
 
-```
+```text
 # ssh root@kube-master-1 "systemctl start kube-apiserver"
 # ssh root@kube-master-1 "systemctl start kube-controller-manager"
 # ssh root@kube-master-1 "systemctl start kube-scheduler"
@@ -137,8 +132,7 @@ should show `KUBE_API_PORT="--secure-port=6443"`
 
 #### Update the Minion/Nodes
 
-Go back to kubernetes/server/bin.
-Run a script of the following form:
+Go back to kubernetes/server/bin. Run a script of the following form:
 
 ```bash
 #!/bin/bash
@@ -157,10 +151,9 @@ done
 
 ### Verify Kubernetes Cluster
 
-From the master node, run the following to verify the cluster is at the correct version
-and that all the nodes are up:
+From the master node, run the following to verify the cluster is at the correct version and that all the nodes are up:
 
-```
+```text
 # kubectl version
 Client Version: version.Info{Major:"1", Minor:"5+", GitVersion:"v1.5.3-beta.0.44+7f2055addfd186-dirty", GitCommit:"7f2055addfd1868a1fb041267c9a02f7ecff071b", GitTreeState:"dirty", BuildDate:"2017-01-25T18:06:46Z", GoVersion:"go1.7.4", Compiler:"gc", Platform:"linux/amd64"}
 Server Version: version.Info{Major:"1", Minor:"5+", GitVersion:"v1.5.3-beta.0.44+7f2055addfd186-dirty", GitCommit:"7f2055addfd1868a1fb041267c9a02f7ecff071b", GitTreeState:"dirty", BuildDate:"2017-01-25T18:51:53Z", GoVersion:"go1.7.4", Compiler:"gc", Platform:"linux/amd64"}
@@ -172,16 +165,16 @@ kube-node-3   Ready     22h
 ```
 
 ## Install Portworx
-Since an earlier step required removing `docker`, Portworx will need to be reinstalled.
-The `kube-master` node should be running `etcd`.   To verify:
 
-```
+Since an earlier step required removing `docker`, Portworx will need to be reinstalled. The `kube-master` node should be running `etcd`. To verify:
+
+```text
 curl -XGET http://${KUBE-MASTER}:2379/version
 ```
 
 Install Portworx on all minion/slave nodes:
 
-```
+```text
 # docker run --restart=always --name px -d --net=host       \
                  --privileged=true                             \
                  -v /run/docker/plugins:/run/docker/plugins    \
@@ -194,3 +187,4 @@ Install Portworx on all minion/slave nodes:
                   -v /usr/src:/usr/src                         \
                 portworx/px-dev -daemon -k etcd://kube-master-1:2379 -c MY_CLUSTER_ID -s /dev/dm-0 -d team0:0 -m team0:0
 ```
+

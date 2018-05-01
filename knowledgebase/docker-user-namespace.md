@@ -1,17 +1,20 @@
 ---
 layout: page
-title: "Run PX with Docker User Namespaces"
-keywords: portworx, install, configure, container, user, namespaces, namespace, security
+title: Run PX with Docker User Namespaces
+keywords: 'portworx, install, configure, container, user, namespaces, namespace, security'
 sidebar: home_sidebar
-redirect_from: "/run-with-user-namespace.html"
+redirect_from: /run-with-user-namespace.html
 ---
+
+# docker-user-namespace
+
 To install and configure PX with Docker user namespaces enabled, use the command-line steps in this section.
 
-### Running Portworx with User Namespaces
+## Running Portworx with User Namespaces
 
 You must enable the `--userns host` directive to Docker
 
-```
+```text
 # sudo docker run --restart=always --name px -d --net=host \
                  --privileged=true                             \
                  --userns=host                                 \
@@ -26,3 +29,4 @@ You must enable the `--userns host` directive to Docker
                  -v /lib/modules:/lib/modules                  \
                 portworx/px-dev -daemon -k etcd://myetc.company.com:4001 -c MY_CLUSTER_ID -s /dev/nbd1 -s /dev/nbd2
 ```
+

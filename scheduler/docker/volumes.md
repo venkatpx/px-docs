@@ -1,17 +1,20 @@
 ---
 layout: page
-title: "Create and Manage Storage Volumes"
-keywords: portworx, px-enterprise, storage, volume, create volume, clone volume
+title: Create and Manage Storage Volumes
+keywords: 'portworx, px-enterprise, storage, volume, create volume, clone volume'
 sidebar: home_sidebar
-redirect_from: "/create-manage-storage-volumes.html"
+redirect_from: /create-manage-storage-volumes.html
 ---
 
+# volumes
+
 * TOC
-{:toc}
+
+  {:toc}
 
 To create and manage volumes, use `pxctl volume`. You can use the created volumes directly with Docker with the `-v` option.
 
-```
+```text
 NAME:
    pxctl volume - Manage volumes
 
@@ -36,39 +39,40 @@ OPTIONS:
 ```
 
 ## Create volumes
+
 Portworx creates volumes from the global capacity of a cluster. You can expand capacity and throughput by adding a node to the cluster. Portworx protects storage volumes from hardware and node failures through automatic replication.
 
 * Durability: Set replication through policy, using the High Availability setting.
- * Each write is synchronously replicated to a quorum set of nodes.
- * Any hardware failure means that the replicated volume has the latest acknowledged writes.
+  * Each write is synchronously replicated to a quorum set of nodes.
+  * Any hardware failure means that the replicated volume has the latest acknowledged writes.
 * Elastic: Add capacity and throughput at each layer, at any time.
- * Volumes are thinly provisioned, only using capacity as needed by the container.
+  * Volumes are thinly provisioned, only using capacity as needed by the container.
   * You can expand and contract the volume's maximum size, even after data has been written to the volume.
 
-A volume can be created before use by its container or by the container directly at runtime. Creating a volume returns the volume's ID. This same volume ID is returned in Docker commands (such as `Docker volume ls`) as is shown in `pxctl` commands.
+A volume can be created before use by its container or by the container directly at runtime. Creating a volume returns the volume's ID. This same volume ID is returned in Docker commands \(such as `Docker volume ls`\) as is shown in `pxctl` commands.
 
 Example of creating a volume through `pxctl`, where the volume ID is returned:
 
-```
+```text
  # pxctl volume create foobar
  3903386035533561360
 ```
 
 Throughput is controlled per container and can be shared. Volumes have fine-grained control, set through policy.
 
- * Throughput is set by the IO Priority setting. Throughput capacity is pooled.
+* Throughput is set by the IO Priority setting. Throughput capacity is pooled.
   * Adding a node to the cluster expands the available throughput for reads and writes.
   * The best node is selected to service reads, whether that read is from a local storage devices or another node's storage devices.
   * Read throughput is aggregated, where multiple nodes can service one read request in parallel streams.
-* Fine-grained controls: Policies are specified per volume and give full control to storage.
- * Policies enforce how the volume is replicated across the cluster, IOPs priority, filesystem, blocksize, and additional parameters described below.
- * Policies are specified at create time and can be applied to existing volumes.
+  * Fine-grained controls: Policies are specified per volume and give full control to storage.
+* Policies enforce how the volume is replicated across the cluster, IOPs priority, filesystem, blocksize, and additional parameters described below.
+* Policies are specified at create time and can be applied to existing volumes.
 
-Set policies on a volume through the options parameter.  These options can also be passed in through the scheduler or using the [inline volume spec](#inline-volume-spec).
+Set policies on a volume through the options parameter. These options can also be passed in through the scheduler or using the [inline volume spec](volumes.md#inline-volume-spec).
 
 Show the available options through the --help command, as shown below:
 
-```
+```text
 # pxctl volume create --help
 NAME:
    pxctl volume create - Create a volume
@@ -96,9 +100,10 @@ OPTIONS:
 ```
 
 ### Create with Docker
+
 All `docker volume` commands are reflected into Portworx storage. For example, a `docker volume create` command provisions a storage volume in a Portworx storage cluster.
 
-```
+```text
 # docker volume create -d pxd --name <volume_name>
 ```
 
@@ -106,30 +111,31 @@ As part of the `docker volume` command, you can add optional parameters through 
 
 Example of options for selecting the container's filesystem and volume size:
 
-```
+```text
   docker volume create -d pxd --name <volume_name> --opt fs=ext4 --opt size=10G
 ```
 
 ## Inline volume spec
-PX supports passing the volume spec inline along with the volume name.  This is useful when creating a volume with your scheduler application template inline and you do not want to create volumes before hand.
+
+PX supports passing the volume spec inline along with the volume name. This is useful when creating a volume with your scheduler application template inline and you do not want to create volumes before hand.
 
 For example, a PX inline spec can be specified as the following:
 
-```
+```text
 # docker volume create -d pxd --name cos=3,size=10G,repl=3,name=demovolume
 ```
 
-This is useful when you need to create a volume dynamically while using docker run.  For example, the following command will create a volume and launch the container dynamically:
+This is useful when you need to create a volume dynamically while using docker run. For example, the following command will create a volume and launch the container dynamically:
 
-```
+```text
 # docker run --volume-driver pxd -it -v cos=3,size=10G,repl=3,name=demovolume:/data busybox sh
 ```
 
 The above command will create a volume called demovolume with an initial size of 10G, HA factor of 3 and a IO priority level of 3 and start the busybox container.
 
-Each spec key must be comma separated.  The following are supported key value pairs:
+Each spec key must be comma separated. The following are supported key value pairs:
 
-```
+```text
 IO priority      - cos=[1,2,3]
 Volume size      - size=[1..9][G|M|T]
 HA factor        - repl=[1,2,3]
@@ -139,27 +145,29 @@ File System      - fs=[xfs|ext4]
 Encryption       - passphrase=secret
 ```
 
-These inline specs can be passed in through the scheduler application template.  For example, below is a snippet from a marathon configuration file:
+These inline specs can be passed in through the scheduler application template. For example, below is a snippet from a marathon configuration file:
 
-```json
+```javascript
 "parameters": [
-	{
-		"key": "volume-driver",
-		"value": "pxd"
-	},
-	{
-		"key": "volume",
-		"value": "size=100G,repl=3,cos=3,name=mysql_vol:/var/lib/mysql"
-	}],
+    {
+        "key": "volume-driver",
+        "value": "pxd"
+    },
+    {
+        "key": "volume",
+        "value": "size=100G,repl=3,cos=3,name=mysql_vol:/var/lib/mysql"
+    }],
 ```
 
-## Global Namespace (Shared Volumes)
-To use Portworx volumes across nodes and multiple containers, see [Shared Volumes](/manage/shared-volumes.html).
+## Global Namespace \(Shared Volumes\)
+
+To use Portworx volumes across nodes and multiple containers, see [Shared Volumes](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/manage/shared-volumes.html).
 
 ## Inspect volumes
+
 Volumes can be inspected for their settings and usage using the `pxctl volume inspect` sub menu.
 
-```
+```text
 # pxctl volume inspect v1
 Volume  :  774553971874590484
         Name                     :  v1
@@ -190,11 +198,11 @@ You can also inspect multiple volumes in one command.
 
 To inspect the volume in `json` format:
 
-```
+```text
 # pxctl -j volume inspect v1
 ```
 
-```json
+```javascript
 [{
  "id": "774553971874590484",
  "source": {
@@ -267,9 +275,10 @@ To inspect the volume in `json` format:
 Note the use of the `-j` flag.
 
 ## Volume snapshots
-You can take snapshots of PX volumes.  Snapshots are thin and do not take additional space.  PX snapshots use branch-on-write so that there is no additional copy when a snapshot is written to.  This is done through B+ Trees.
 
-```
+You can take snapshots of PX volumes. Snapshots are thin and do not take additional space. PX snapshots use branch-on-write so that there is no additional copy when a snapshot is written to. This is done through B+ Trees.
+
+```text
 # pxctl snap -h
 NAME:
    pxctl snap - Manage volume snapshots
@@ -286,5 +295,5 @@ OPTIONS:
    --help, -h  show help
 ```
 
-Snapshot volumes can be used as any other regular volume.  For example, they can be passed into `docker run -v snapshot:/mount_path`.
+Snapshot volumes can be used as any other regular volume. For example, they can be passed into `docker run -v snapshot:/mount_path`.
 

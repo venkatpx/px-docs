@@ -1,37 +1,44 @@
 ---
 layout: page
-title: "Volume Scaling with DCOS"
-keywords: portworx, jenkins
+title: Volume Scaling with DCOS
+keywords: 'portworx, jenkins'
 sidebar: home_sidebar
 ---
 
+# volume-scaling
+
 * TOC
-{:toc}
+
+  {:toc}
 
 DCOS via Marathon allows scaling the number of instances of applications. However, when these applications require data volumes, there is no way to associate instances to data volumes.
 
 `volume-sets` allows re-use of the same volume name for all container instances by performing on-demand creation of volumes as user containers get scheduled on different nodes. Each instance of a container gets a unique instance of a data volume.
 
-In runtime, a node may fail and applications get respawned on different nodes. With `volume-sets`, applications are re-associated with volumes regardless of where they are respawned. Because the association between a container and volume is done
-*after* the scheduler picks a node, the volume  chosen is a volume that has data local to the node, thus enabling compute-convergent (data colocated with the container) architectures.
+In runtime, a node may fail and applications get respawned on different nodes. With `volume-sets`, applications are re-associated with volumes regardless of where they are respawned. Because the association between a container and volume is done _after_ the scheduler picks a node, the volume chosen is a volume that has data local to the node, thus enabling compute-convergent \(data colocated with the container\) architectures.
 
 ## Implementation
-When a `volume-set` is requested to be attached, an attempt is made to attach a volume that has data local to the node. If such a volume is not found, then one is
-created using the volume spec of the scaled volume as a template.  An error is returned if a free volume in the set is not found and no more volumes can be created as per the `volume-set` `scale` limit.
 
->**Important:**<br/>You **must** use DCOS constraints when using PX volume sets:
->```json
->"constraints": [["hostname", "UNIQUE"]]
->```
->Failing to do so may cause inconsistent results in the event that Marathon relaunches or reschedules an application upon failure, with the possibility of multiple instances landing on the same host.
+When a `volume-set` is requested to be attached, an attempt is made to attach a volume that has data local to the node. If such a volume is not found, then one is created using the volume spec of the scaled volume as a template. An error is returned if a free volume in the set is not found and no more volumes can be created as per the `volume-set` `scale` limit.
+
+> **Important:**  
+> You **must** use DCOS constraints when using PX volume sets:
+>
+> ```javascript
+> "constraints": [["hostname", "UNIQUE"]]
+> ```
+>
+> Failing to do so may cause inconsistent results in the event that Marathon relaunches or reschedules an application upon failure, with the possibility of multiple instances landing on the same host.
 
 ## Usage
-A `volume-set` can be created using the pxctl CLI, docker CLI, or inline volume spec.  This can be done via the `pxctl` cli, or docker directly as follows:
+
+A `volume-set` can be created using the pxctl CLI, docker CLI, or inline volume spec. This can be done via the `pxctl` cli, or docker directly as follows:
 
 ## pxctl CLI
+
 The `--scale` parameter automatically creates a volume set:
 
-```
+```text
 # pxctl volume create elk_vol --scale 10
 Volume successfully created: 232783593254518125
 
@@ -42,7 +49,7 @@ ID                      NAME            SIZE         HA      SHARED  ENCRYPTED  
 
 ## Docker CLI
 
-```
+```text
 # docker volume create --driver pxd --name elk_vol --opt scale=10
 # pxctl volume list
 ID                      NAME            SIZE         HA      SHARED  ENCRYPTED       IO_PRIORITY     SCALE   STATUS
@@ -50,9 +57,10 @@ ID                      NAME            SIZE         HA      SHARED  ENCRYPTED  
 ```
 
 ## Inline `volume-set` creation through DCOS
+
 This is useful when creating volumes through DCOS.
 
-```
+```text
 # docker volume create -d pxd --name scale=10,size=1G,repl=1,name=elk_vol
 
 # pxctl volume list
@@ -64,7 +72,7 @@ ID                      NAME            SIZE         HA      SHARED  ENCRYPTED  
 
 A `volume-set`'s scale factor can be modified after the volume is created:
 
-```
+```text
 # pxctl volume update scale_vol --scale 12
 # pxctl volume list
 ID                      NAME            SIZE         HA      SHARED  ENCRYPTED       IO_PRIORITY     SCALE   STATUS
@@ -74,9 +82,10 @@ ID                      NAME            SIZE         HA      SHARED  ENCRYPTED  
 Decreasing the scaled volume only restricts creation of future volumes. Decreasing scale will not delete any volumes.
 
 ### Examples
+
 Following is an example that takes advantage of `volume-sets`
 
-```
+```text
 {
    "id":"/minio",
    "cpus": 2.0,
@@ -134,15 +143,17 @@ Following is an example that takes advantage of `volume-sets`
 }
 ```
 
-
 ## FAQ
 
 ### Can I attach more than one instance of a `volume-set` on the same node?
-If multiple containers request the same volume from a `volume-set` on a node, only one instance is created. The volume will be shared between client containers.  This is done to ensure cross application shared-data integrity.
+
+If multiple containers request the same volume from a `volume-set` on a node, only one instance is created. The volume will be shared between client containers. This is done to ensure cross application shared-data integrity.
 
 ### How do I delete a scaled volume
+
 At present all the instances of the `volume-set` need to be deleted one by one.
 
 ### How do I request for a specific instance of a scaled volume
+
 You can always specify a an instance of a `volume-set` by name.
 

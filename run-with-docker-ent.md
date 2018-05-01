@@ -1,35 +1,45 @@
 ---
 layout: page
-title: "Run PX with Docker"
-keywords: portworx, px-enterpriseeloper, px-enterprise, install, configure, container, storage, add nodes
+title: Run PX with Docker
+keywords: >-
+  portworx, px-enterpriseeloper, px-enterprise, install, configure, container,
+  storage, add nodes
 sidebar: home_sidebar
 ---
+
+# run-with-docker-ent
+
 To install and configure PX via the Docker CLI, use the command-line steps in this section.
 
->**Important:**<br/>You must be granted access to the PX-Enterprise container on the Docker hub.  Please contact support@portworx.com if you need a license key.
+> **Important:**  
+> You must be granted access to the PX-Enterprise container on the Docker hub. Please contact support@portworx.com if you need a license key.
 
-### Lighthouse
-If you are using the SaaS version of the PX-Enterprise Lighthouse, then we are hosting your metadata for cloud analytics and a GUI interface to manage your cluster.  Please make sure you received the correct token from support@portworx.com.
+## Lighthouse
 
->**Important:**<br/>If you are *NOT* using the Portworx hosted SaaS service for management, then note that PX stores configuration metadata in a KVDB (key/value store), such as Etcd or Consul. If you have an existing KVDB, you may use that.  If you want to set one up, see the [etcd example](/run-etcd.html) for PX
+If you are using the SaaS version of the PX-Enterprise Lighthouse, then we are hosting your metadata for cloud analytics and a GUI interface to manage your cluster. Please make sure you received the correct token from support@portworx.com.
 
-### Install and configure Docker
+> **Important:**  
+> If you are _NOT_ using the Portworx hosted SaaS service for management, then note that PX stores configuration metadata in a KVDB \(key/value store\), such as Etcd or Consul. If you have an existing KVDB, you may use that. If you want to set one up, see the [etcd example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/run-etcd.html) for PX
 
-PX requires a minimum of Docker version 1.10 to be installed.  Follow the [Docker install](https://docs.docker.com/engine/installation/) guide to install and start the Docker Service.
+## Install and configure Docker
 
->**Important:**<br/>If you are runnig a version prior to Docker 1.12, then you *must* configure Docker to allow shared mounts propogation.  Please follow [these](/knowledgebase/shared-mount-propogation.html) instructions to enable shared mount propogation.  This is needed because PX runs as a container and it will be provisioning storage to other containers.
+PX requires a minimum of Docker version 1.10 to be installed. Follow the [Docker install](https://docs.docker.com/engine/installation/) guide to install and start the Docker Service.
 
-### Specify storage
+> **Important:**  
+> If you are runnig a version prior to Docker 1.12, then you _must_ configure Docker to allow shared mounts propogation. Please follow [these](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/knowledgebase/shared-mount-propogation.html) instructions to enable shared mount propogation. This is needed because PX runs as a container and it will be provisioning storage to other containers.
 
-Portworx pools the storage devices on your server and creates a global capacity for containers. This example uses the two non-root storage devices (/dev/xvdb, /dev/xvdc).
+## Specify storage
 
->**Important:**<br/>Back up any data on storage devices that will be pooled. Storage devices will be reformatted!
+Portworx pools the storage devices on your server and creates a global capacity for containers. This example uses the two non-root storage devices \(/dev/xvdb, /dev/xvdc\).
+
+> **Important:**  
+> Back up any data on storage devices that will be pooled. Storage devices will be reformatted!
 
 To view the storage devices on your server
 
 Use this command line:
 
-```
+```text
 # lsblk
 ```
 
@@ -37,7 +47,7 @@ Example output:
 
 Note that devices without the partition are shown under the **TYPE** column as **part**.
 
-```
+```text
 # lsblk
     NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
     xvda                      202:0    0     8G  0 disk
@@ -46,13 +56,13 @@ Note that devices without the partition are shown under the **TYPE** column as *
     xvdc                      202:32   0    64G  0 disk
 ```
 
-Identify the storage devices you will be allocating to PX.  PX can run in a heterogeneous environment, so you can mix and match drives of different types.  Different servers in the cluster can also have different drive configurations.
+Identify the storage devices you will be allocating to PX. PX can run in a heterogeneous environment, so you can mix and match drives of different types. Different servers in the cluster can also have different drive configurations.
 
-### Run PX
+## Run PX
 
 You can now run PX via the Docker CLI as follows:
 
-```
+```text
 # sudo docker run --restart=always --name px -d --net=host     \
                  --privileged=true                             \
                  -v /run/docker/plugins:/run/docker/plugins    \
@@ -67,11 +77,12 @@ You can now run PX via the Docker CLI as follows:
                 portworx/px-enterprise -daemon -k etcd://myetc.company.com:2379 -c MY_CLUSTER_ID -s /dev/sdb -s /dev/sdc
 ```
 
->**Note:**<br/>For Lighthouse users, when you create a cluster in the Lighthouse console, Lighthouse will craft the above command with the correct values for the KVDB and cluster ID.
+> **Note:**  
+> For Lighthouse users, when you create a cluster in the Lighthouse console, Lighthouse will craft the above command with the correct values for the KVDB and cluster ID.
+>
+> **Important:** CoreOS and VMWare Photon users run the command below:
 
->**Important:** CoreOS and VMWare Photon users run the command below:
-
-```
+```text
 # sudo docker run --restart=always --name px -d --net=host     \
                  --privileged=true                             \
                  -v /run/docker/plugins:/run/docker/plugins    \
@@ -87,41 +98,41 @@ You can now run PX via the Docker CLI as follows:
 
 The following arguments are provided to the PX daemon:
 
-```
+```text
 -daemon
-	> Instructs PX to start in daemon mode.  Other modes are for service users only.
+    > Instructs PX to start in daemon mode.  Other modes are for service users only.
 
 -k
-	> Points to your key value database, such as an etcd cluster or a consul cluster.
+    > Points to your key value database, such as an etcd cluster or a consul cluster.
 
 -c
-	> Specifies the cluster ID that this PX instance is to join.  You can create any unique name for a cluster ID.
+    > Specifies the cluster ID that this PX instance is to join.  You can create any unique name for a cluster ID.
 
 -s
-	> Specifies the various drives that PX should use for storing the data.
+    > Specifies the various drives that PX should use for storing the data.
 
 -a
-	> Instructs PX to use any available, unused and unmounted drive.  PX will never use a drive that is mounted.
+    > Instructs PX to use any available, unused and unmounted drive.  PX will never use a drive that is mounted.
 
 -A
     > Instructs PX to use any available, unused and unmounted drives or partitions.  PX will never use a drive or partition that is mounted.
 
 -f
-	> Optional.  Instructs PX to use an unmounted drive even if it has a filesystem on it.
+    > Optional.  Instructs PX to use an unmounted drive even if it has a filesystem on it.
 
 -z
-	> Optional.  Instructs PX to run in zero storage mode.  In this mode, PX can still provide virtual storage to your containers, but the data will come over the network from other PX nodes.
+    > Optional.  Instructs PX to run in zero storage mode.  In this mode, PX can still provide virtual storage to your containers, but the data will come over the network from other PX nodes.
 
 -d
-	> Optional.  Specifies the data interface.
+    > Optional.  Specifies the data interface.
 
 -m
-	> Optional.  Specifies the management interface.
+    > Optional.  Specifies the management interface.
 ```
 
 The following Docker runtime command options are explained:
 
-```
+```text
 --privileged
     > Sets PX to be a privileged container. Required to export block  device and for other functions.
 
@@ -150,33 +161,31 @@ The following Docker runtime command options are explained:
     > Exports the PX command line (**pxctl**) tool from the container to the host.
 ```
 
-#### Optional - running with config.json
+### Optional - running with config.json
 
-You can also provide the runtime parameters to PX via a configuration file called config.json.  When this is present, you do not need to pass the runtime parameters via the command line.  This maybe useful if you are using tools like chef or puppet to provision your host machines.
+You can also provide the runtime parameters to PX via a configuration file called config.json. When this is present, you do not need to pass the runtime parameters via the command line. This maybe useful if you are using tools like chef or puppet to provision your host machines.
 
 1. Download the sample [config.json file](https://raw.githubusercontent.com/portworx/px-dev/master/conf/config.json)
-
 2. Create a directory for the configuration file.
 
-   ```
+   ```text
    # sudo mkdir -p /etc/pwx
    ```
-   
+
 3. Move the configuration file to that directory. This directory later gets passed in on the Docker command line.
 
-   ```
+   ```text
    # sudo cp -p config.json /etc/pwx
    ```
-   
+
 4. Edit the config.json to include the following:
    * `clusterid`: This string identifies your cluster and must be unique within your etcd key/value space.
    * `kvdb`: This is the etcd connection string for your etcd key/value store.
    * `devices`: These are the storage devices that will be pooled from the prior step.
 
-
 Example config.json:
 
-```
+```text
    {
       "clusterid": "make this unique in your k/v store",
       "kvdb": [
@@ -191,13 +200,12 @@ Example config.json:
     }
 ```
 
-
->**Important:**<br/>If you are using Compose.IO and the `kvdb` string ends with `[port]/v2/keys`, omit the `/v2/keys`. Before running the container, make sure you have saved off any data on the storage devices specified in the configuration.
-
+> **Important:**  
+> If you are using Compose.IO and the `kvdb` string ends with `[port]/v2/keys`, omit the `/v2/keys`. Before running the container, make sure you have saved off any data on the storage devices specified in the configuration.
 
 You can now start the Portworx container with the following run command:
 
-```
+```text
 # sudo docker run --restart=always --name px -d --net=host     \
                  --privileged=true                             \
                  -v /run/docker/plugins:/run/docker/plugins    \
@@ -214,10 +222,11 @@ You can now start the Portworx container with the following run command:
 
 At this point, Portworx should be running on your system. To verify, run `docker ps`.
 
-#### Authenticated `etcd` and `consul`
+### Authenticated `etcd` and `consul`
+
 To use `etcd` with authentication and a cafile, use this in your `config.json`:
 
-```json
+```javascript
 "kvdb": [
    "etcd:https://<ip1>:<port>",
    "etcd:https://<ip2>:<port>"
@@ -229,7 +238,7 @@ To use `etcd` with authentication and a cafile, use this in your `config.json`:
 
 To use `consul` with authentication and a cafile, use this in your `config.json`:
 
-```json
+```javascript
 "kvdb": [
    "consul:https://<ip1>:<port>",
    "consul:https://<ip2>:<port>"
@@ -239,60 +248,61 @@ To use `consul` with authentication and a cafile, use this in your `config.json`
  "cafile": "/etc/pwx/cafile",
 ```
 
-### Access the pxctl CLI
+## Access the pxctl CLI
+
 After Portworx is running, you can create and delete storage volumes through the Docker volume commands or the **pxctl** command line tool, which is exported to /opt/pwx/bin/pxctl. With **pxctl**, you can also inspect volumes, the volume relationships with containers, and nodes.
 
 To view all **pxctl** options, run:
 
-```
+```text
 # /opt/pwx/bin/pxctl help
 ```
 
 To view global storage capacity
 
-
 To view the global storage capacity, run:
 
-```
+```text
 # sudo /opt/pwx/bin/pxctl status
 ```
 
 The following sample output of `pxctl status` shows that the global capacity for Docker containers is 128 GB.
 
-```
+```text
 # /opt/pwx/bin/pxctl status
 Status: PX is operational
 Node ID: 0a0f1f22-374c-4082-8040-5528686b42be
-	IP: 172.31.50.10
- 	Local Storage Pool: 2 pools
-	POOL	IO_PRIORITY	SIZE	USED	STATUS	ZONE	REGION
-	0	LOW		64 GiB	1.1 GiB	Online	b	us-east-1
-	1	LOW		128 GiB	1.1 GiB	Online	b	us-east-1
-	Local Storage Devices: 2 devices
-	Device	Path		Media Type		Size		Last-Scan
-	0:1	/dev/xvdf	STORAGE_MEDIUM_SSD	64 GiB		10 Dec 16 20:07 UTC
-	1:1	/dev/xvdi	STORAGE_MEDIUM_SSD	128 GiB		10 Dec 16 20:07 UTC
-	total			-			192 GiB
+    IP: 172.31.50.10
+     Local Storage Pool: 2 pools
+    POOL    IO_PRIORITY    SIZE    USED    STATUS    ZONE    REGION
+    0    LOW        64 GiB    1.1 GiB    Online    b    us-east-1
+    1    LOW        128 GiB    1.1 GiB    Online    b    us-east-1
+    Local Storage Devices: 2 devices
+    Device    Path        Media Type        Size        Last-Scan
+    0:1    /dev/xvdf    STORAGE_MEDIUM_SSD    64 GiB        10 Dec 16 20:07 UTC
+    1:1    /dev/xvdi    STORAGE_MEDIUM_SSD    128 GiB        10 Dec 16 20:07 UTC
+    total            -            192 GiB
 Cluster Summary
-	Cluster ID: 55f8a8c6-3883-4797-8c34-0cfe783d9890
-	IP		ID					Used	Capacity	Status
-	172.31.50.10	0a0f1f22-374c-4082-8040-5528686b42be	2.2 GiB	192 GiB		Online (This node)
+    Cluster ID: 55f8a8c6-3883-4797-8c34-0cfe783d9890
+    IP        ID                    Used    Capacity    Status
+    172.31.50.10    0a0f1f22-374c-4082-8040-5528686b42be    2.2 GiB    192 GiB        Online (This node)
 Global Storage Pool
-	Total Used    	:  2.2 GiB
-	Total Capacity	:  192 GiB
+    Total Used        :  2.2 GiB
+    Total Capacity    :  192 GiB
 ```
 
-For more on using **pxctl**, see the [CLI Reference](/control/cli.html).
+For more on using **pxctl**, see the [CLI Reference](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/control/cli.html).
 
-You have now completed setup of Portworx on your first server. To increase capacity and enable high availability, repeat the same steps on each of the remaining two servers. Run **pxctl** status to view the cluster status. Then, to continue with examples of running stateful applications and databases with Docker and PX, see [Application Solutions](/application-solutions.html).
+You have now completed setup of Portworx on your first server. To increase capacity and enable high availability, repeat the same steps on each of the remaining two servers. Run **pxctl** status to view the cluster status. Then, to continue with examples of running stateful applications and databases with Docker and PX, see [Application Solutions](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/application-solutions.html).
 
-### Adding Nodes
+## Adding Nodes
 
-To add nodes to increase capacity and enable high availability, simply repeat these steps on other servers.  As long as PX is started with the same cluster ID, they will form a cluster.
+To add nodes to increase capacity and enable high availability, simply repeat these steps on other servers. As long as PX is started with the same cluster ID, they will form a cluster.
 
-### Application Examples
+## Application Examples
 
 After you complete this installation, continue with the set up to run stateful containers with Docker volumes:
 
-* [Scale a Cassandra Database with PX](/applications/cassandra.html)
-* [Run the Docker Registry with High Availability](/applications/docker-registry.html)
+* [Scale a Cassandra Database with PX](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/applications/cassandra.html)
+* [Run the Docker Registry with High Availability](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/applications/docker-registry.html)
+

@@ -1,13 +1,16 @@
 ---
 layout: page
-title: "PX-Enterprise Release notes"
-keywords: portworx, px-enterprise, release notes
+title: PX-Enterprise Release notes
+keywords: 'portworx, px-enterprise, release notes'
 sidebar: home_sidebar
-redirect_from: "/px-enterprise-release-notes.html"
+redirect_from: /px-enterprise-release-notes.html
 ---
 
+# portworx-enterprise
+
 * TOC
-{:toc}
+
+  {:toc}
 
 ## 1.2.4 Release notes
 
@@ -22,7 +25,6 @@ redirect_from: "/px-enterprise-release-notes.html"
 * One-time backup schedules for Cloudsnap
 * Removed the requirement to have /etc/pwx/kubernetes.yaml in all k8s nodes 
 
-
 ### Key Issues Addressed
 
 * `pxctl cloudsnap credentials` command has been moved under `pxctl credentials`
@@ -35,7 +37,6 @@ redirect_from: "/px-enterprise-release-notes.html"
 * Removed non-px related metrics being pushed to Prometheus
 * Added CLI feedback and success/failure alerts for `pxctl volume update` command
 * Fixed issues with Cloudsnap backup status updates for container restarts
-
 
 ## 1.2.3 Release notes
 
@@ -69,19 +70,20 @@ No new features in 1.2.1. This is a patch release.
 * Improve performance with remote volume mounts
 * Add compatbility for Linux 4.10+ kernels
 
-
 ## 1.2 Release notes
 
 ### Key Features
 
-* [AWS Auto-scaling integration with Portworx](/cloud/aws-ec2-asg.html) managing EBS volumes for EC2 instances in AWS ASG 
-* [Multi-cloud Backup and Restore](/cloud/backups.html) of Portworx Volumes 
-* [Encrypted Volumes](/manage/encrypted-volumes.html) with Data-at-rest and Data-in-flight encryption
-* [Docker V2 Plugin Support](/install/docker-plugin.html)
-* [Prometheus Integeration](/maintain/prometheus.html)
+* [AWS Auto-scaling integration with Portworx](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/cloud/aws-ec2-asg.html) managing EBS volumes for EC2 instances in AWS ASG 
+* [Multi-cloud Backup and Restore](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/cloud/backups.html) of Portworx Volumes 
+* [Encrypted Volumes](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/manage/encrypted-volumes.html) with Data-at-rest and Data-in-flight encryption
+* [Docker V2 Plugin Support](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/install/docker-plugin.html)
+* [Prometheus Integeration](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/maintain/prometheus.html)
 * [Hashicorp Vault](https://docs.portworx.com/portworx-with-vault.html), [AWS KMS integration](https://docs.portworx.com/portworx-with-aws-kms.html) and 
+
   Docker Secrets Integration
-* [Dynamically resize](/manage/volume-update.html#increase-volume-size) PX Volumes with no application downtime
+
+* [Dynamically resize](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/manage/volume-update.html#increase-volume-size) PX Volumes with no application downtime
 * Security updates improve PX container security
 
 ### Key Issues Addressed
@@ -115,8 +117,8 @@ No new features in 1.2.1. This is a patch release.
 * Rancher catalog support for CoreOS
 
 ### Key notes
-* COS is now referenced as IO Priority
 
+* COS is now referenced as IO Priority
 
 ## 1.1.4 Release notes
 
@@ -128,7 +130,7 @@ Improve node failure and resync handling
 
 ### Key Features
 
-* Shared volumes (or shared namespace support) [Shared Volumes](/manage/shared-volumes.html)
+* Shared volumes \(or shared namespace support\) [Shared Volumes](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/manage/shared-volumes.html)
 * Scale Volumes support - Create volumes in scale with single command
 * Sticky Volumes support - Create volumes with sticky bit so only a pxctl volume delete can delete it
 * Improvements in replication performance
@@ -137,6 +139,7 @@ Improve node failure and resync handling
 ## 1.1.2 Release notes
 
 ### Key Features
+
 * Support scaling up to 256 nodes
 * Enhanced authentication support for etcd
 * Support Kubernetes scheduler placement of containers
@@ -144,21 +147,23 @@ Improve node failure and resync handling
 * Enhanced drive replacement workflows
 
 ### Key Issues Addressed
+
 * Prevent volume updates in maintenance mode from happening
 * Fixed netstats calculation to resolve the network throughput display issues
 * Improve etcd version check handling in cases where the etcd version is not recieved
 * Add support for etcd versions between 2.0 to 2.3
 
 ### Key notes
+
 * Note that the shared namespace feature is still in beta.
 
 ## 1.1.0 Release notes
 
 ### Key Features
-* Class of Service Support. Refer to [CoS](/manage/class-of-service.html)
-* Lighthouse on-prem for airgapped environments. Refer to [Lighthouse on-prem](/enterprise/on-premise-lighthouse.html)
-* Scale up to 125 nodes
 
+* Class of Service Support. Refer to [CoS](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/manage/class-of-service.html)
+* Lighthouse on-prem for airgapped environments. Refer to [Lighthouse on-prem](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/enterprise/on-premise-lighthouse.html)
+* Scale up to 125 nodes
 
 ### Key Issues Addressed
 
@@ -171,12 +176,12 @@ Improve node failure and resync handling
 * Fix for shared volume detach failures
 
 ### Key notes
-* Note that the shared namespace feature is still in beta.
 
+* Note that the shared namespace feature is still in beta.
 
 ## 1.0.9 Release Notes
 
-* Add Amazon ECS Support. Refer to [Portworx-on-ECS](/portworx-on-ecs.html)
+* Add Amazon ECS Support. Refer to [Portworx-on-ECS](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/portworx-on-ecs.html)
 
 ## 1.0.8 Release Notes
 
@@ -186,9 +191,11 @@ Improve node failure and resync handling
 ## 1.0.7 Release Notes
 
 ### Key Features
+
 * Continual online drive health monitoring.
 
 ### Key Issues addressed
+
 * Fix for Lighthouse reporting some nodes as online when the entire cluster is down.
 * Shared volumes can occasionally cause high CPU spikes.  This has been fixed.
 * Improvements to the shared volumes throughput.
@@ -197,20 +204,16 @@ Improve node failure and resync handling
 
 ## 1.0.6 Release Notes
 
-### Key Features 
+### Key Features
+
 * Support for Consul
 * Ability to add storage to a head-only node
 * Ability to import data from an external storage source
 * Ability to bootstrap and deploy PX through external automated procedures.  PX takes command line parameters and does not need a config.json. 
 * Support for Rancher
 
-### Key Issues addressed 
+### Key Issues addressed
+
 * Fix for occasional PX node restart.  Occasionaly during heavy load, a PX node would get marked down by gossip, and asked to restart.  While this did not cause any noticable delay in IO, it would flood the logs with gossip error messages.  This bug has been fixed.
-* Minor CLI enhancements around displaying IP addresses instead of node IDs (where possible).
-
-
-
-
-
-
+* Minor CLI enhancements around displaying IP addresses instead of node IDs \(where possible\).
 

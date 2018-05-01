@@ -1,19 +1,25 @@
 ---
 layout: page
-title: "Dynamic Provisioning"
-keywords: portworx, container, Kubernetes, storage, Docker, k8s, flexvol, pv, persistent disk, StatefulSets
+title: Dynamic Provisioning
+keywords: >-
+  portworx, container, Kubernetes, storage, Docker, k8s, flexvol, pv, persistent
+  disk, StatefulSets
 sidebar: home_sidebar
 ---
+
+# dynamic-provisioning
 
 This document describes how to dynamically provision a volume using Kubernetes and Portworx.
 
 ## Using Dynamic Provisioning
+
 Using Dynamic Provisioning and Storage Classes you don't need to create Portworx volumes out of band and they will be created automatically.
 
 ### Storage Classes
+
 Using Storage Classes objects an admin can define the different classes of Portworx Volumes that are offered in a cluster. Following are the different parameters that can be used to define a Portworx Storage Class
 
-```
+```text
 - fs: filesystem to be laid out: none|xfs|ext4 (default: `ext4`)
 - block_size: block size in Kbytes (default: `32`)
 - repl: replication factor [1..3] (default: `1`)
@@ -29,7 +35,7 @@ Using Storage Classes objects an admin can define the different classes of Portw
 
 Create the storageclass:
 
-```
+```text
 # kubectl create -f \
    examples/volumes/portworx/portworx-volume-sc-high.yaml
 ```
@@ -47,17 +53,18 @@ Example:
        snap_interval:   "70"
        io_priority:  "high"
 ```
-[Download example](/k8s-samples/portworx-volume-sc-high.yaml?raw=true)
+
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-volume-sc-high.yaml?raw=true)
 
 Verifying storage class is created:
 
-```
+```text
 # kubectl describe storageclass portworx-io-priority-high
-     Name: 	        	portworx-io-priority-high
-     IsDefaultClass:	        No
-     Annotations:		<none>
-     Provisioner:		kubernetes.io/portworx-volume
-     Parameters:		io_priority=high,repl=1,snapshot_interval=70
+     Name:                 portworx-io-priority-high
+     IsDefaultClass:            No
+     Annotations:        <none>
+     Provisioner:        kubernetes.io/portworx-volume
+     Parameters:        io_priority=high,repl=1,snapshot_interval=70
      No events.
 ```
 
@@ -65,7 +72,7 @@ Verifying storage class is created:
 
 Creating the persistent volume claim:
 
-```
+```text
 # kubectl create -f examples/volumes/portworx/portworx-volume-pvcsc.yaml
 ```
 
@@ -85,40 +92,42 @@ Example:
          requests:
            storage: 2Gi
 ```
-[Download example](/k8s-samples/portworx-volume-pvcsc.yaml?raw=true)
+
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-volume-pvcsc.yaml?raw=true)
 
 Verifying persistent volume claim is created:
 
-```
+```text
 # kubectl describe pvc pvcsc001
-    Name:	      	pvcsc001
-    Namespace:      	default
-    StorageClass:   	portworx-io-priority-high
-    Status:	      	Bound
-    Volume:         	pvc-e5578707-c626-11e6-baf6-08002729a32b
-    Labels:	      	<none>
-    Capacity:	        2Gi
-    Access Modes:   	RWO
+    Name:              pvcsc001
+    Namespace:          default
+    StorageClass:       portworx-io-priority-high
+    Status:              Bound
+    Volume:             pvc-e5578707-c626-11e6-baf6-08002729a32b
+    Labels:              <none>
+    Capacity:            2Gi
+    Access Modes:       RWO
     No Events.
 ```
+
 Persistent Volume is automatically created and is bounded to this pvc.
 
 Verifying persistent volume claim is created:
 
-```
+```text
 # kubectl describe pv pvc-e5578707-c626-11e6-baf6-08002729a32b
-    Name: 	      	pvc-e5578707-c626-11e6-baf6-08002729a32b
-    Labels:        	<none>
-    StorageClass:  	portworx-io-priority-high
-    Status:	      	Bound
-    Claim:	      	default/pvcsc001
-    Reclaim Policy: 	Delete
-    Access Modes:   	RWO
-    Capacity:	        2Gi
+    Name:               pvc-e5578707-c626-11e6-baf6-08002729a32b
+    Labels:            <none>
+    StorageClass:      portworx-io-priority-high
+    Status:              Bound
+    Claim:              default/pvcsc001
+    Reclaim Policy:     Delete
+    Access Modes:       RWO
+    Capacity:            2Gi
     Message:
     Source:
-    Type:	      	PortworxVolume (a Portworx Persistent Volume resource)
-    VolumeID:   	374093969022973811
+    Type:              PortworxVolume (a Portworx Persistent Volume resource)
+    VolumeID:       374093969022973811
     No events.
 ```
 
@@ -126,7 +135,7 @@ Verifying persistent volume claim is created:
 
 Create the pod:
 
-```
+```text
 # kubectl create -f examples/volumes/portworx/portworx-volume-pvcscpod.yaml
 ```
 
@@ -149,12 +158,14 @@ Example:
          persistentVolumeClaim:
            claimName: pvcsc001
 ```
-[Download example](/k8s-samples/portworx-volume-pvcscpod.yaml?raw=true)
+
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-volume-pvcscpod.yaml?raw=true)
 
 Verifying pod is created:
 
-```
+```text
 # kubectl get pod pvpod
    NAME      READY     STATUS    RESTARTS   AGE
-   pvpod       1/1     Running   0          48m        
+   pvpod       1/1     Running   0          48m
 ```
+

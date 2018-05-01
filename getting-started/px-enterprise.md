@@ -1,13 +1,16 @@
 ---
 layout: page
 sidebar: home_sidebar
-title: "Get Started with PX-Enterprise"
-keywords: portworx, px-developer, container, storage, requirements
-redirect_from: "/get-started-px-enterprise.html"
+title: Get Started with PX-Enterprise
+keywords: 'portworx, px-developer, container, storage, requirements'
+redirect_from: /get-started-px-enterprise.html
 ---
 
+# px-enterprise
+
 * TOC
-{:toc}
+
+  {:toc}
 
 ## Step 1: Verify requirements
 
@@ -34,19 +37,19 @@ redirect_from: "/get-started-px-enterprise.html"
 
 See our quick start guides:
 
-* [Run PX-Enterprise with Docker](/run-with-docker-ent.html)
+* [Run PX-Enterprise with Docker](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/run-with-docker-ent.html)
 
 Run Portworx with schedulers:
 
-* [Run Portworx with Kubernetes](/scheduler/kubernetes.html)
-* [Run Portworx with Mesosphere](/scheduler/mesosphere-dcos/install.html)
-* [Run Portworx with Rancher](/scheduler/rancher.html)
+* [Run Portworx with Kubernetes](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/kubernetes.html)
+* [Run Portworx with Mesosphere](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/mesosphere-dcos/install.html)
+* [Run Portworx with Rancher](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/rancher.html)
 
 Run stateful containers with Docker volumes:
 
-* [Application Solutions](/application-solutions.html)
+* [Application Solutions](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/application-solutions.html)
 
-Use **pxctl** ([CLI Reference](/control/cli.html)) to directly:
+Use **pxctl** \([CLI Reference](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/control/cli.html)\) to directly:
 
 * View the cluster global capacity and health
 * Create, inspect, and delete storage volumes
@@ -54,8 +57,9 @@ Use **pxctl** ([CLI Reference](/control/cli.html)) to directly:
 
 If you run into an issue:
 
-* [Troubleshooting](/knowledgebase/troubleshooting.html)
+* [Troubleshooting](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/knowledgebase/troubleshooting.html)
 
 As you use PX-Enterprise, please share your feedback and ask questions. Find the team on [Google Groups](https://groups.google.com/forum/#!forum/portworx).
 
-If your requirements extend beyond the scope of PX-Enterprise, please [contact Portworx](http://portworx.com/contact-us/) for information on PX-Enterprise. You can take a tour of the PX-Enterprise console [here](#step-3-take-a-tour-of-the-px-enterprise-web-console).
+If your requirements extend beyond the scope of PX-Enterprise, please [contact Portworx](http://portworx.com/contact-us/) for information on PX-Enterprise. You can take a tour of the PX-Enterprise console [here](px-enterprise.md#step-3-take-a-tour-of-the-px-enterprise-web-console).
+

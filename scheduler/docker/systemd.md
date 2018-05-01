@@ -1,9 +1,11 @@
 ---
 layout: page
-title: "Start PX via 'systemd' and templates"
+title: Start PX via 'systemd' and templates
 keywords: systemd automate
 sidebar: home_sidebar
 ---
+
+# systemd
 
 If you are creating a template image - be it an AWS AMI or a Virtual Machine Image - This reference outlines the best practices to automate the provisioning of a multinode PX cluster by creating a base image via `systemd`:
 
@@ -44,7 +46,7 @@ ExecStop=/usr/bin/docker stop -t 10 %n
 WantedBy=multi-user.target
 ```
 
-You must edit the above template to provide the cluster and node initialization options.  Provide one of the following examples as command line arguments positioned after “px-enterprise”:
+You must edit the above template to provide the cluster and node initialization options. Provide one of the following examples as command line arguments positioned after “px-enterprise”:
 
 ```bash
 -t <token> token that was provided in email (or arbitrary clusterID)
@@ -72,13 +74,14 @@ For example, you can provide this after the `-d px-enterprise` line in the above
 
 Once you create systemd unit file, be sure to enable this unit by running:
 
-```
+```text
 # systemctl daemon-reload
 # systemctl enable portworx
 ```
 
-At this point your machine image is ready to be saved and cloned.  You can launch a multiple of these images and each initial execution of the machine will cause PX to initialize the node and join the provided cluster.  Subsequent boots will simply cause PX to join as an existing node.
+At this point your machine image is ready to be saved and cloned. You can launch a multiple of these images and each initial execution of the machine will cause PX to initialize the node and join the provided cluster. Subsequent boots will simply cause PX to join as an existing node.
 
->**Note:** Do NOT start PX on your master image.  If you do that, then PX will create a configuration file which will permanently become part of your master image and not portable to the clones.
+> **Note:** Do NOT start PX on your master image. If you do that, then PX will create a configuration file which will permanently become part of your master image and not portable to the clones.
+>
+> **Note:** If other systemd service contain "Wants=portworx.service", then those services will be restarted anytime that a restart is done on the portworx.service. In order to avoid this, any dependent services should be launched through a scheduler such as Mesos or Kubernetes.
 
->**Note:** If other systemd service contain "Wants=portworx.service", then those services will be restarted anytime that a restart is done on the portworx.service.   In order to avoid this, any dependent services should be launched through a scheduler such as Mesos or Kubernetes.

@@ -1,10 +1,12 @@
 ---
 layout: page
-title: "Docker Compose, Wordpress and MySQL on Portworx"
-keywords: portworx, volume stack, application stack, docker compose
+title: 'Docker Compose, Wordpress and MySQL on Portworx'
+keywords: 'portworx, volume stack, application stack, docker compose'
 sidebar: home_sidebar
-redirect_from: "/docker-compose.html"
+redirect_from: /docker-compose.html
 ---
+
+# docker-compose
 
 Docker Compose provides a simple powerful way of quickly deploying application stacks. Version 2 of Compose provides the ability to use PX volume drivers in one of the following ways:
 
@@ -57,7 +59,7 @@ volumes:
 
 After `docker-compose up -d`, the following volumes are automatically created through docker-compose, through the existence of `external: false`. You can also create volumes out of band with `pxctl`, and reference them with `external: true`.
 
-```
+```text
 [root@PX-SM3 ~]# pxctl v l
 ID          NAME        SIZE    HA       SHARED STATUS
 274113421587995748  wp_wpvol    7.0 GiB 1   no  up - attached on 93a68f30-edcf-4ef4-9122-1b4e0be6ce8b
@@ -65,3 +67,4 @@ ID          NAME        SIZE    HA       SHARED STATUS
 ```
 
 To bring down the stack, use `docker-compose down --volumes` to remove any volumes that were automatically created.
+

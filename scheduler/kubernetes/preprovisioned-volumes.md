@@ -1,19 +1,21 @@
 ---
 layout: page
-title: "Pre-provisioned volumes"
-keywords: portworx, pre-provisioned volumes, container, Kubernetes, storage, Docker, k8s, flexvol, pv, persistent disk, StatefulSets
+title: Pre-provisioned volumes
+keywords: >-
+  portworx, pre-provisioned volumes, container, Kubernetes, storage, Docker,
+  k8s, flexvol, pv, persistent disk, StatefulSets
 sidebar: home_sidebar
 ---
 
-This document describes how to use a pre-provisioned volume in your Kubernetes cluster.
+# preprovisioned-volumes
 
+This document describes how to use a pre-provisioned volume in your Kubernetes cluster.
 
 ## Using Pre-provisioned Volumes
 
-Create a Volume using Portworx CLI.
-On one of the Kubernetes nodes with Portworx installed run the following command
+Create a Volume using Portworx CLI. On one of the Kubernetes nodes with Portworx installed run the following command
 
-```
+```text
 # /opt/pwx/bin/pxctl volume create <vol-id> --size <size> --fs <fs-type>
 ```
 
@@ -42,19 +44,20 @@ Example:
          volumeID: "<vol-id>"
          fsType: "<fs-type>"
 ```
-[Download example](/k8s-samples/portworx-volume-pod.yaml?raw=true)
 
-Make sure to replace "vol-id" and "fs-type" in the above spec with
-the ones that you used while creating the volume.
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-volume-pod.yaml?raw=true)
+
+Make sure to replace "vol-id" and "fs-type" in the above spec with the ones that you used while creating the volume.
 
 Create the Pod.
 
-```
+```text
 # kubectl create -f examples/volumes/portworx/portworx-volume-pod.yaml
 ```
+
 Verify that pod is running:
 
-```
+```text
 # kubectl.sh get pods
     NAME                       READY     STATUS    RESTARTS   AGE
     test-portworx-volume-pod   1/1       Running   0          16s
@@ -66,9 +69,10 @@ Verify that pod is running:
 
 You can create a persistent volume using the following command:
 
-```
+```text
 # kubectl create -f examples/volumes/portworx/portworx-volume-pv.yaml
 ```
+
 Example:
 
 ```yaml
@@ -86,27 +90,27 @@ Example:
           volumeID: "<vol-id>"
           fsType:   "<fs-type>"
 ```
-Make sure to replace &lt;vol-id&gt;, &lt;size&gt; and &lt;fs-type&gt; in the above spec with
-the ones that you used while creating the volume.
 
-[Download example](/k8s-samples/portworx-volume-pv.yaml?raw=true)
+Make sure to replace &lt;vol-id&gt;, &lt;size&gt; and &lt;fs-type&gt; in the above spec with the ones that you used while creating the volume.
+
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-volume-pv.yaml?raw=true)
 
 Verifying persistent volume is created:
 
-```
+```text
 # kubectl describe pv pv0001
-    Name: 	        pv0001
-    Labels:		<none>
+    Name:             pv0001
+    Labels:        <none>
     StorageClass:
-    Status:		Available
+    Status:        Available
     Claim:
-    Reclaim Policy:	Retain
-    Access Modes:	RWO
-    Capacity:		2Gi
+    Reclaim Policy:    Retain
+    Access Modes:    RWO
+    Capacity:        2Gi
     Message:
     Source:
-    Type:	        PortworxVolume (a Portworx Persistent Volume resource)
-    VolumeID:	        pv0001
+    Type:            PortworxVolume (a Portworx Persistent Volume resource)
+    VolumeID:            pv0001
     FSType:             ext4
     No events.
 ```
@@ -115,9 +119,10 @@ Verifying persistent volume is created:
 
 You can create a persistent volume claim using the following command:
 
-```
+```text
 # kubectl create -f examples/volumes/portworx/portworx-volume-pvc.yaml
 ```
+
 Example:
 
 ```yaml
@@ -132,19 +137,20 @@ Example:
           requests:
             storage: <size>Gi
 ```
-[Download example](/k8s-samples/portworx-volume-pvc.yaml?raw=true)
+
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-volume-pvc.yaml?raw=true)
 
 Verifying persistent volume claim is created:
 
-```
+```text
 # kubectl describe pvc pvc0001
-    Name:		pvc0001
-    Namespace:	        default
-    Status:		Bound
-    Volume:		pv0001
-    Labels:		<none>
-    Capacity:	        2Gi
-    Access Modes:	RWO
+    Name:        pvc0001
+    Namespace:            default
+    Status:        Bound
+    Volume:        pv0001
+    Labels:        <none>
+    Capacity:            2Gi
+    Access Modes:    RWO
     No events.
 ```
 
@@ -152,7 +158,7 @@ Verifying persistent volume claim is created:
 
 You can create a pod which uses the PVC by running the following command:
 
-```
+```text
 # kubectl create -f examples/volumes/portworx/portworx-volume-pvcpod.yaml
 ```
 
@@ -175,12 +181,14 @@ Example:
           persistentVolumeClaim:
             claimName: pvc0001
 ```
-[Download example](/k8s-samples/portworx-volume-pvcpod.yaml?raw=true)
+
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/k8s-samples/portworx-volume-pvcpod.yaml?raw=true)
 
 Verifying pod is created:
 
-```
+```text
 # kubectl get pod pvpod
     NAME      READY     STATUS    RESTARTS   AGE
-    pvpod       1/1     Running   0          48m        
+    pvpod       1/1     Running   0          48m
 ```
+

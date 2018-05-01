@@ -1,10 +1,12 @@
 ---
 layout: page
-title: "Cluster Alerting Preferences"
+title: Cluster Alerting Preferences
 keywords: lighthouse
 sidebar: home_sidebar
-redirect_from: "/Lighthouse-Manage-Clusters.html"
+redirect_from: /Lighthouse-Manage-Clusters.html
 ---
+
+# cluster-alerting
 
 You can setup alerting preferences for your cluster as the following.
 
@@ -13,4 +15,5 @@ You can setup alerting preferences for your cluster as the following.
 * On this page you can enable email alerts, and make selections for critical alerts, warning alerts etc. It can also be integrated with syslog server
 * Click Save
 
-![LH-ALERTING-PREFERENCES](/images/Cluster-Alerting-Preferences.png "LH Alerting Preferences"){:width="795px" height="666px"}
+![LH Alerting Preferences](../.gitbook/assets/cluster-alerting-preferences.png){:width="795px" height="666px"}
+

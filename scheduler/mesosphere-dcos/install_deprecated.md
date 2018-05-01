@@ -1,41 +1,42 @@
 ---
 layout: page
-title: "Run Portworx with Mesosphere/DCOS"
-keywords: portworx, PX-Developer, container, Mesos, Mesosphere, Marathon, storage
+title: Run Portworx with Mesosphere/DCOS
+keywords: 'portworx, PX-Developer, container, Mesos, Mesosphere, Marathon, storage'
 sidebar: home_sidebar
-youtubeId : 02yMYE-CEdw
-redirect_from: "/run-with-mesosphere.html"
+youtubeId: 02yMYE-CEdw
+redirect_from: /run-with-mesosphere.html
 ---
 
-* TOC
-{:toc}
+# install\_deprecated
 
-Portworx communicates with DCOS through either the Docker Volume Driver Interface (DVDI) or, directly through CSI.
+* TOC
+
+  {:toc}
+
+Portworx communicates with DCOS through either the Docker Volume Driver Interface \(DVDI\) or, directly through CSI.
 
 ## Deploy Portworx
-You can deploy Portworx through Marathon or through the Mesosphere Universe catalog.  Follow one of the two options below.
 
+You can deploy Portworx through Marathon or through the Mesosphere Universe catalog. Follow one of the two options below.
 
 ### To Deploy Portworx through Marathon:
 
-For simple deployment with DCOS, please follow [these instructions](/scheduler/mesosphere-dcos/px_etcd_marathon.html) for creating
-Portworx and ```etcd``` together as a converged application group.
+For simple deployment with DCOS, please follow [these instructions](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/mesosphere-dcos/px_etcd_marathon.html) for creating Portworx and `etcd` together as a converged application group.
 
-This section assumes that Portworx will be installed on a set of homogeneously configured machines (which is not a general requirement for Portworx).
+This section assumes that Portworx will be installed on a set of homogeneously configured machines \(which is not a general requirement for Portworx\).
 
 The pre-requisites for installing Portworx through Marathon include:
 
-1. Determine the list of physical devices (disks and interfaces) for the agent/slave nodes
+1. Determine the list of physical devices \(disks and interfaces\) for the agent/slave nodes
 2. Determine the IPaddress and Port of the etcd server. 
 3. If using Lighthouse, obtain your Lighthouse token.
 
-The following is a sample JSON file that can be used to launch Portworx through Marathon.
-The example below assumes the hosts are running CoreOS with an implicit (localhost) etcd.
-For all other OS's, please refer to the `etcd` or `consul` instance, and change all references of `/lib/modules` to `/usr/src`.
+The following is a sample JSON file that can be used to launch Portworx through Marathon. The example below assumes the hosts are running CoreOS with an implicit \(localhost\) etcd. For all other OS's, please refer to the `etcd` or `consul` instance, and change all references of `/lib/modules` to `/usr/src`.
 
->**Important:**<br/> If you are **not** deploying Portworx on all nodes in the cluster, then you should include a *"pxfabric"* constraint.  Please see [Portworx with Mesos constraints](/scheduler/mesosphere-dcos/px_with_constraints.html)
+> **Important:**  
+>  If you are **not** deploying Portworx on all nodes in the cluster, then you should include a _"pxfabric"_ constraint. Please see [Portworx with Mesos constraints](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/scheduler/mesosphere-dcos/px_with_constraints.html)
 
-```json
+```javascript
 {
     "id": "pxcluster1",
     "cpus": 2,
@@ -106,31 +107,30 @@ For all other OS's, please refer to the `etcd` or `consul` instance, and change 
     }]
 }
 ```
-[Download example](/px-marathon.json?raw=true)
 
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/px-marathon.json?raw=true)
 
 This example illustrates running PX-Enterprise in an "air-gapped" environment, as noted by the "**-c mesos-demo1**" cluster argument and the "**-k etcd**" argument for the key-value database.
 
-If running PX-Enterprise with Lighthouse (SaaS or on-prem), then both the "**-c**" and "**-k**" options would be replaced with a single "**-t**" option indiciating the Lighthouse token-ID.
+If running PX-Enterprise with Lighthouse \(SaaS or on-prem\), then both the "**-c**" and "**-k**" options would be replaced with a single "**-t**" option indiciating the Lighthouse token-ID.
 
 Each physical device must be listed with its own "**-s**" argument.
 
-In this example a single network interface ("bond0") is used for both management and data traffic.
+In this example a single network interface \("bond0"\) is used for both management and data traffic.
 
-For all command line options, please see [px-enterprise-usage](/px-usage.html)
+For all command line options, please see [px-enterprise-usage](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/px-usage.html)
 
 ### To Deploy Portworx through Universe:
-Portworx is now available through the Mesosphere Universe catalog of services.
-![Portworx on Universe](/images/universe.png){:width="2047px" height="884px"}
 
-Deploying Portworx through Mesosphere Universe provides great ease of deployment.
-Please follow the published [Mesosphere/DCOS Examples for deploying Portworx through Universe](https://github.com/dcos/examples/tree/master/portworx/1.9) 
+Portworx is now available through the Mesosphere Universe catalog of services. ![Portworx on Universe](../../.gitbook/assets/universe.png){:width="2047px" height="884px"}
+
+Deploying Portworx through Mesosphere Universe provides great ease of deployment. Please follow the published [Mesosphere/DCOS Examples for deploying Portworx through Universe](https://github.com/dcos/examples/tree/master/portworx/1.9)
 
 ### Reference PX volumes through the Marathon configuration file
 
 Portworx passes the `pxd` docker volume driver and any associated volumes to Marathon as Docker parameters. The following example is for `mysql`.
 
-```json
+```javascript
 {
     "id": "mysql",
     "cpus": 0.5,
@@ -167,16 +167,16 @@ Portworx passes the `pxd` docker volume driver and any associated volumes to Mar
 }
 ```
 
-[Download example](/px-marathon-mysql.json?raw=true)
+[Download example](https://github.com/venkatpx/px-docs/tree/3f39ba94d6d6d91385dcd6792eb6da61d0016b4d/px-marathon-mysql.json?raw=true)
 
 * Notice the Docker `parameters` clause as the way to reference the `pxd` volume driver as well as the volume itself.
 * The referenced volume can be a volume name, a volume ID, or a snapshot ID.   If the volume name does not previously exist, it gets created in-band with default settings.
 * The `constraints` clause, restricts this task to running only on Agent nodes that are part of a given Portworx cluster.
 
->**Important:**<br/> If you are **not** deploying Portworx on all nodes in the cluster, then you should include a *"pxfabric"* constraint.
-For example:
+> **Important:**  
+>  If you are **not** deploying Portworx on all nodes in the cluster, then you should include a _"pxfabric"_ constraint. For example:
 
-```json
+```javascript
  "constraints": [
             [
               "pxfabric",
@@ -184,19 +184,19 @@ For example:
               "pxclust1"
             ]]
   ...
-  ```
-  
+```
 
 ### Launch the application through Marathon
 
 To launch the application through the DC/OS CLI:
 
-```
+```text
 # dcos marathon app add mysql.json
 ```
 
 To launch the application through Marathon directly:
 
-```
+```text
 # curl -X POST http://1.2.3.4:8080/v2/apps -d @mysql.json -H "Content-type: application/json"
 ```
+

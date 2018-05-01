@@ -1,15 +1,16 @@
 ---
 layout: page
-title: "Welcome to Portworx Docs"
-keywords: portworx, px-enterprise, px-developer, containers, storage
+title: Welcome to Portworx Docs
+keywords: 'portworx, px-enterprise, px-developer, containers, storage'
 sidebar: home_sidebar
-youtubeId : 0zTjOly0vkA
+youtubeId: 0zTjOly0vkA
 ---
 
-<a href="https://github.com/portworx/px-docs"><img style="position: absolute; top: 0; right: 80; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" align=right></a>
+# README
 
-Portworx is a software defined persistent storage solution designed and purpose built for containers.  Portworx is a clustered block storage solution deployed itself as a container and provides a Cloud-Native storage solution where applications can programmatically consume stateful services directly through schedulers such as Kubernetes, Mesos and Swarm.
-Portworx storage is delivered as a container that gets installed on your servers that run stateful applications. 
+![Fork me on GitHub](https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67)
+
+Portworx is a software defined persistent storage solution designed and purpose built for containers. Portworx is a clustered block storage solution deployed itself as a container and provides a Cloud-Native storage solution where applications can programmatically consume stateful services directly through schedulers such as Kubernetes, Mesos and Swarm. Portworx storage is delivered as a container that gets installed on your servers that run stateful applications.
 
 Portworx technology:
 
@@ -21,12 +22,13 @@ Portworx technology:
 * Is radically simple - Portworx is deployed just like any other container - and managed by your scheduler of choice.
 
 ## Watch the video
+
 Here is a short video that shows how Portworx provides an entire platform of services for managing stateful containerized applications in any Cloud or On-Prem data center:
-{% include youtubePlayer.html id=page.youtubeId %}
 
 Portworx technology is available as PX-Enterprise and PX-Developer.
 
 ## Join us on Slack!
+
 Join us on [slack](http://slack.portworx.com)
 
 ## PX-Enterprise
@@ -46,11 +48,6 @@ PX-Enterprise is for DevOps and IT ops teams managing storage for containerized 
 * Command-line interface
 * RESTful API for automation and statistics
 
-<FORM METHOD="LINK" ACTION="/getting-started/px-enterprise.html">
-<INPUT TYPE="submit" VALUE="Get Started with PX-Enterprise">
-</FORM>
-
-
 ## PX-Developer
 
 PX-Developer is free, easy-to-deploy scale-out storage for developers. If you're running workloads under your desk and want to be free of managing hardware or need container-granular storage, check out PX-Developer.
@@ -64,9 +61,8 @@ PX-Developer features:
 * Support for up three servers per cluster and 1 TB per volume
 * Requires an etcd or Consul key/value store
 
-<FORM METHOD="LINK" ACTION="/getting-started/px-developer.html">
-<INPUT TYPE="submit" VALUE="Get Started with PX-Developer">
-</FORM>
-<br/>
+ &lt;/FORM&gt;   
+
 
 [Contact us](http://portworx.com/contact-us/) to share feedback, work with us, and to request features.
+

@@ -8,10 +8,6 @@ redirect_from: /cos.html
 
 # class-of-service
 
-* TOC
-
-  {:toc}
-
 Through class of service \(also known as a `CoS`\), a single volume's class of service can be controlled and mapped to specific underlying storage infrastructure capabilities.
 
 ## Explanation of Class of Service

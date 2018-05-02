@@ -1,7 +1,7 @@
 # Table of contents
 
 * [README](README.md)
-* kubernetes
+* Portworx on Kubernetes
   * [snaps](kubernetes/snaps.md)
   * [statefulsets](kubernetes/statefulsets.md)
   * [preprovisioned-volumes](kubernetes/preprovisioned-volumes.md)

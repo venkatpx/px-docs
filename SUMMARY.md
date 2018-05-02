@@ -1,8 +1,16 @@
 # Table of contents
 
 * [README](README.md)
-* Welcome to Portworx Docs
-  * [shared-volumes](video/shared-volumes.md)
+* kubernetes
+  * [snaps](kubernetes/snaps.md)
+  * [statefulsets](kubernetes/statefulsets.md)
+  * [preprovisioned-volumes](kubernetes/preprovisioned-volumes.md)
+  * [Storage Classes](kubernetes/storage-classes.md)
+  * [dynamic-provisioning](kubernetes/dynamic-provisioning.md)
+  * [Using scheduler convergence](kubernetes/using-scheduler-convergence.md)
+  * [Failover MYSQL Pod to a different node](kubernetes/failover-mysql-pod-to-a-different-node.md)
+  * [install](kubernetes/install.md)
+* Other schedulers
   * [rancher](video/rancher.md)
   * [dcos](video/dcos.md)
   * [hadoop\_px\_dcos](video/hadoop_px_dcos.md)
@@ -64,15 +72,6 @@
     * [swarm](scheduler/docker/swarm.md)
     * [systemd](scheduler/docker/systemd.md)
     * [ucp](scheduler/docker/ucp.md)
-  * kubernetes
-    * [snaps](scheduler/kubernetes/snaps.md)
-    * [statefulsets](scheduler/kubernetes/statefulsets.md)
-    * [preprovisioned-volumes](scheduler/kubernetes/preprovisioned-volumes.md)
-    * [Storage Classes](scheduler/kubernetes/storage-classes.md)
-    * [dynamic-provisioning](scheduler/kubernetes/dynamic-provisioning.md)
-    * [Using scheduler convergence](scheduler/kubernetes/using-scheduler-convergence.md)
-    * [Failover MYSQL Pod to a different node](scheduler/kubernetes/failover-mysql-pod-to-a-different-node.md)
-    * [install](scheduler/kubernetes/install.md)
   * rancher
     * [install](scheduler/rancher/install.md)
 * maintain

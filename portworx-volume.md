@@ -7,14 +7,14 @@ sidebar: home_sidebar
 
 # Portworx Volume
 
-* [Portworx](k8s-samples.md#portworx)
-* [Prerequisites](k8s-samples.md#prerequisites)
-* [Examples](k8s-samples.md#examples)
-  * [Using Pre-provisioned Portworx Volumes](k8s-samples.md#pre-provisioned)
-    * [Running Pod](k8s-samples.md#running-pod)
-    * [Persistent Volumes](k8s-samples.md#persistent-volumes)
-  * [Using Dynamic Provisioning](k8s-samples.md#dynamic-provisioning)
-    * [Storage Class](k8s-samples.md#storage-class)
+* [Portworx](portworx-volume.md#portworx)
+* [Prerequisites](portworx-volume.md#prerequisites)
+* [Examples](portworx-volume.md#examples)
+  * [Using Pre-provisioned Portworx Volumes](portworx-volume.md#pre-provisioned)
+    * [Running Pod](portworx-volume.md#running-pod)
+    * [Persistent Volumes](portworx-volume.md#persistent-volumes)
+  * [Using Dynamic Provisioning](portworx-volume.md#dynamic-provisioning)
+    * [Storage Class](portworx-volume.md#storage-class)
 
 ## Portworx
 

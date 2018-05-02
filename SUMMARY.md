@@ -1,7 +1,7 @@
 # Table of contents
 
 * [README](README.md)
-* video
+* Welcome to Portworx Docs
   * [shared-volumes](video/shared-volumes.md)
   * [rancher](video/rancher.md)
   * [dcos](video/dcos.md)
@@ -16,7 +16,7 @@
   * [volume-update](manage/volume-update.md)
   * [encrypted-volumes](manage/encrypted-volumes.md)
 * applications
-  * [Running PostgreSQL from CrunchyData on Portworx](applications/postgres.md)
+  * [Running PostgreSQL from CrunchyData on Portworx](applications/running-postgresql-from-crunchydata-on-portworx.md)
   * [cassandra-px-perf-test](applications/cassandra-px-perf-test.md)
   * [docker-registry](applications/docker-registry.md)
   * [cassandra](applications/cassandra.md)
@@ -68,10 +68,10 @@
     * [snaps](scheduler/kubernetes/snaps.md)
     * [statefulsets](scheduler/kubernetes/statefulsets.md)
     * [preprovisioned-volumes](scheduler/kubernetes/preprovisioned-volumes.md)
-    * [Storage Classes](scheduler/kubernetes/storage-class.md)
+    * [Storage Classes](scheduler/kubernetes/storage-classes.md)
     * [dynamic-provisioning](scheduler/kubernetes/dynamic-provisioning.md)
-    * [Using scheduler convergence](scheduler/kubernetes/scheduler-convergence.md)
-    * [Failover MYSQL Pod to a different node](scheduler/kubernetes/failover.md)
+    * [Using scheduler convergence](scheduler/kubernetes/using-scheduler-convergence.md)
+    * [Failover MYSQL Pod to a different node](scheduler/kubernetes/failover-mysql-pod-to-a-different-node.md)
     * [install](scheduler/kubernetes/install.md)
   * rancher
     * [install](scheduler/rancher/install.md)
@@ -79,7 +79,7 @@
   * [scale-up](maintain/scale-up.md)
   * [maintenance-mode](maintain/maintenance-mode.md)
   * [users-groups](maintain/users-groups.md)
-  * [Upgrading Portworx](maintain/upgrade.md)
+  * [Upgrading Portworx](maintain/upgrading-portworx.md)
   * [storageless-nodes](maintain/storageless-nodes.md)
   * [prometheus](maintain/prometheus.md)
   * performance
@@ -102,7 +102,7 @@
     * [cloudformation](cloud/aws/cloudformation.md)
 * [objectstore](objectstore.md)
 * knowledgebase
-  * ["No such file or directory" message when running on SELinux](knowledgebase/selinux.md)
+  * ["No such file or directory" message when running on SELinux](knowledgebase/no-such-file-or-directory-message-when-running-on-selinux.md)
   * [shared-mount-propogation](knowledgebase/shared-mount-propogation.md)
   * [sdn](knowledgebase/sdn.md)
   * [faqs](knowledgebase/faqs.md)
@@ -126,9 +126,9 @@
   * [px-developer](getting-started/px-developer.md)
   * [asap](getting-started/asap.md)
   * [px-enterprise](getting-started/px-enterprise.md)
-* [PX-Enterprise Usage](px-usage.md)
+* [PX-Enterprise Usage](px-enterprise-usage.md)
 * [portworx-with-terraform](portworx-with-terraform.md)
-* [Portworx Volume](k8s-samples.md)
+* [Portworx Volume](portworx-volume.md)
 * [cloud-config](cloud-config.md)
 * [Portworx with Vault](portworx-with-vault.md)
 * [coming\_soon](coming_soon.md)
@@ -144,17 +144,17 @@
   * [on-premise-lighthouse](enterprise/on-premise-lighthouse.md)
 * [runpx](runpx.md)
 * [index](index.md)
-* [Kubernetes with Portworx on CoreOS with Packet.net](portworx-with-k8s-coreos-packet.md)
+* [Kubernetes with Portworx on CoreOS with Packet.net](kubernetes-with-portworx-on-coreos-with-packet.net.md)
 * [run-etcd](run-etcd.md)
 * reference-architecture
   * [docker-datacenter](reference-architecture/docker-datacenter.md)
 * [run-with-kube](run-with-kube.md)
-* [How To Update/Maintain px-docs](how_to_docs.md)
+* [How To Update/Maintain px-docs](how-to-update-maintain-px-docs.md)
 * [release-notes-1-0-9](release-notes-1-0-9.md)
 * [release-notes-1-0-8](release-notes-1-0-8.md)
 * [release-notes-1-0-7](release-notes-1-0-7.md)
 * [release-notes-1-0-6](release-notes-1-0-6.md)
-* [Portworx with Kubernetes on CentOS with Packet.net](portworx-with-k8s-centos-packet.md)
-* [Steps to update Lighthouse user password from CLI](update-lh-password.md)
+* [Portworx with Kubernetes on CentOS with Packet.net](portworx-with-kubernetes-on-centos-with-packet.net.md)
+* [Steps to update Lighthouse user password from CLI](steps-to-update-lighthouse-user-password-from-cli.md)
 * [Portworx with AWS KMS](portworx-with-aws-kms.md)
 

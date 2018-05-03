@@ -355,7 +355,163 @@ Now that you have Portworx installed, checkout various examples of [applications
 {% endtab %}
 
 {% tab title="AKS Install" %}
+#### Overview {#overview}
 
+The [Azure Managed Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) \(aks-engine\) generates the Azure Resource Manager\(ARM\) templates for Kubernetes enabled clusters in the Microsoft Azure Environment.
+
+#### Install `azure CLI` {#install-azure-cli}
+
+Install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
+
+#### Login to the Azure and Set Subscription {#login-to-the-azure-and-set-subscription}
+
+* az login
+* az account set –subscription “Your-Azure-Subscription-UUID”
+
+#### Create the Azure Resource Group and Location {#create-the-azure-resource-group-and-location}
+
+Pick a name for the Azure Resource Group and choose a LOCATION value among the following:
+
+Get the Azure locations using azure CLI command:
+
+* az account list-locations
+
+example locations: `centralus,eastasia,southeastasia,eastus,eastus2,westus,westus2,northcentralus`   
+`southcentralus,westcentralus,northeurope,westeurope,japaneast,japanwest`   
+`brazilsouth,australiasoutheast,australiaeast,westindia,southindia,centralindia`   
+`canadacentral,canadaeast,uksouth,ukwest,koreacentral,koreasouth`
+
+* az group create –name “region-name” –location “location”
+
+#### Create a service principal in Azure AD {#create-a-service-principal-in-azure-ad}
+
+```text
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/72c299a4-xxxx-xxxx-xxxx-6855109979d9"
+{
+  "appId": "1311e5f6-xxxx-xxxx-xxxx-ede45a6b2bde",
+  "displayName": "azure-cli-2017-10-27-07-37-41",
+  "name": "http://azure-cli-2017-10-27-07-37-41",
+  "password": "ac49a307-xxxx-xxxx-xxxx-fa551e221170",
+  "tenant": "ca9700ce-xxxx-xxxx-xxxx-09c48f71d0ce"
+}
+```
+
+Make note of the `appId` and `password`
+
+#### Create the AKS cluster {#create-the-aks-cluster}
+
+Create the AKS cluster using either by Azure CLI or Azure Portal as per [AKS docs page](https://docs.microsoft.com/en-us/azure/aks/).
+
+#### Attach Data Disk to Azure VM {#attach-data-disk-to-azure-vm}
+
+Follow the instructions from the Azure documentation [How to attach a data disk to a AKS nodes in the Azure portal ](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-attach-disk-portal/)
+
+Your deployment will look something like following:
+
+![Azure Add Disk](https://docs.portworx.com/images/azure-add-disk.png)
+
+#### Install Portworx {#install-portworx}
+
+Portworx gets deployed as a [Kubernetes DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/). Following sections describe how to generate the spec files and apply them.
+
+**Generating the spec**
+
+To generate the spec file, head on to the below URLs for the PX release you wish to use.
+
+* [1.4 Tech Preview](https://install.portworx.com/1.4/).
+* [1.3 Stable](https://install.portworx.com/1.3/).
+* [1.2 Stable](https://install.portworx.com/1.2/).
+
+Alternately, you can use curl to generate the spec as described in [Generating Portworx Kubernetes spec using curl](https://docs.portworx.com/scheduler/kubernetes/px-k8s-spec-curl.html).
+
+**Secure ETCD and Certificates**
+
+If using secure etcd provide “https” in the URL and make sure all the certificates are in the _/etc/pwx/_ directory on each host which is bind mounted inside PX container.
+
+**Using Secrets to Provision Certificates**
+
+It is recommended to use Kubernetes Secrets to provide ETCD certificates to Portworx. This way, the certificates will be automatically mounted when new nodes join the cluster.
+
+Copy all your etcd certificates and key in a folder _etcd-secrets/_ to create a Kubernetes secret from it.
+
+```text
+# ls etcd-secrets
+etcd-ca etcd-cert   etcd-key
+```
+
+Use `kubectl` to create the secret named `px-etcd-certs` from the above files:
+
+```text
+# kubectl -n kube-system create secret generic px-etcd-certs --from-file=etcd-secrets/
+```
+
+Now edit the Portworx spec file to reference the certificates. Given the names of the files are `etcd-ca`, `etcd-cert` and `etcd-key`, modify the _volumeMounts_ and _volumes_ sections as follows:
+
+```text
+  volumeMounts:
+  - mountPath: /etc/pwx/etcdcerts
+    name: etcdcerts
+```
+
+```text
+  volumes:
+  - name: etcdcerts
+    secret:
+      secretName: px-etcd-certs
+      items:
+      - key: etcd-ca
+        path: pwx-etcd-ca.crt
+      - key: etcd-cert
+        path: pwx-etcd-cert.crt
+      - key: etcd-key
+        path: pwx-etcd-key.key
+```
+
+Now that the certificates are mounted at `/etc/pwx/etcdcerts`, change the portworx container args to use the correct certificate paths:
+
+```text
+  containers:
+  - name: portworx
+    args:
+      ["-c", "test-cluster", "-a", "-f",
+      "-ca", "/etc/pwx/etcdcerts/pwx-etcd-ca.crt",
+      "-cert", "/etc/pwx/etcdcerts/pwx-etcd-cert.crt",
+      "-key", "/etc/pwx/etcdcerts/pwx-etcd-key.key",
+      "-x", "kubernetes"]
+```
+
+**Installing behind the HTTP proxy**
+
+During the installation Portworx may require access to the Internet, to fetch kernel headers if they are not available locally on the host system. If your cluster runs behind the HTTP proxy, you will need to expose _PX\_HTTP\_PROXY_and/or _PX\_HTTPS\_PROXY_ environment variables to point to your HTTP proxy when starting the DaemonSet.
+
+Use _e=PX\_HTTP\_PROXY=&lt;http-proxy&gt;,PX\_HTTPS\_PROXY=&lt;https-proxy&gt;_ query param when generating the DaemonSet spec.
+
+**Applying the spec**
+
+Once you have generated the spec file, deploy Portworx.
+
+```text
+$ kubectl apply -f px-spec.yaml
+```
+
+Monitor the portworx pods
+
+```text
+kubectl get pods -o wide -n kube-system -l name=portworx
+```
+
+Monitor Portworx cluster status
+
+```text
+PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
+kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status
+```
+
+If you are still experiencing issues, please refer to [Troubleshooting PX on Kubernetes](https://docs.portworx.com/scheduler/kubernetes/support.html) and [General FAQs](https://docs.portworx.com/knowledgebase/faqs.html).
+
+#### Deploy a sample application {#deploy-a-sample-application}
+
+Now that you have Portworx installed, checkout various examples of [applications using Portworx on Kubernetes](https://docs.portworx.com/scheduler/kubernetes/k8s-px-app-samples.html).
 {% endtab %}
 
 {% tab title="Openshift Install" %}

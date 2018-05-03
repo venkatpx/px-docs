@@ -9,7 +9,7 @@
   * [dynamic-provisioning](kubernetes/dynamic-provisioning.md)
   * [Using scheduler convergence](kubernetes/using-scheduler-convergence.md)
   * [Failover MYSQL Pod to a different node](kubernetes/failover-mysql-pod-to-a-different-node.md)
-  * [Install](kubernetes/install.md)
+  * [install](kubernetes/install.md)
 * Other schedulers
   * [rancher](video/rancher.md)
   * [dcos](video/dcos.md)

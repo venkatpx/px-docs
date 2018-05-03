@@ -515,7 +515,185 @@ Now that you have Portworx installed, checkout various examples of [applications
 {% endtab %}
 
 {% tab title="Openshift Install" %}
+### Prerequisites {#prerequisites}
 
+**Key-value store**
+
+Portworx uses a key-value store for it’s clustering metadata. Please have a clustered key-value database \(etcd or consul\) installed and ready. For etcd installation instructions refer this [doc](https://docs.portworx.com/maintain/etcd.html).
+
+**Shared mounts**
+
+Portworx 1.3 and higher automatically enables shared mounts.
+
+If you are installing Portworx 1.2, you _must_ configure Docker to allow shared mounts propagation \(see [instructions](https://docs.portworx.com/knowledgebase/shared-mount-propogation.html)\), as otherwise Portworx will fail to start.
+
+**Firewall**
+
+Ensure ports 9001-9015 are open between the nodes that will run Portworx. Your nodes should also be able to reach the port KVDB is running on \(for example etcd usually runs on port 2379\).
+
+**NTP**
+
+Ensure all nodes running PX are time-synchronized, and NTP service is configured and running.
+
+**Red Hat account**
+
+Portworx container for Openshift resides in [RedHat’s container repository](https://access.redhat.com/containers/#/registry.connect.redhat.com/portworx/px-enterprise), and needs to be installed using your Red Hat account’s username and password. You can register Red Hat account for free at https://www.redhat.com/wapps/ugc/register.html.
+
+**Openshift Version**
+
+Portworx supports Openshift 3.7 and above.
+
+### Install {#install}
+
+Portworx gets deployed as a [Kubernetes DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/). Following sections describe how to generate the spec files and apply them.
+
+#### Add Portworx service accounts to the privileged security context {#add-portworx-service-accounts-to-the-privileged-security-context}
+
+```text
+oc adm policy add-scc-to-user privileged system:serviceaccount:kube-system:px-account
+oc adm policy add-scc-to-user privileged system:serviceaccount:kube-system:portworx-pvc-controller-account
+oc adm policy add-scc-to-user anyuid system:serviceaccount:default:default
+```
+
+#### Prepare docker-registry credentials secret {#prepare-docker-registry-credentials-secret}
+
+To install Portworx for Openshift, you will require a valid Red Hat account \([register here](https://www.redhat.com/wapps/ugc/register.html)\), and configured [Kubernetes secret](https://kubernetes.io/docs/concepts/containers/images/#creating-a-secret-with-a-docker-config) with username/password credentials:
+
+```text
+# confirm the username/password works  (e.g. user:john-rhel, passwd:s3cret)
+docker login -u john-rhel -p s3cret registry.connect.redhat.com
+> Login Succeeded
+
+# configure username/password as a kubernetes "docker-registry" secret  (e.g. "regcred")
+oc create secret docker-registry regcred --docker-server=registry.connect.redhat.com \
+  --docker-username=john-rhel --docker-password=s3cret --docker-email=test@acme.org \
+  -n kube-system
+```
+
+#### Generate the spec {#generate-the-spec}
+
+> **Note:**  
+> Make sure to select “\[x\] Openshift” and provide “Kubernetes docker-registry secret: _regcred_” while generating the spec \(i.e. the spec-URL should have the _osft=true_ and _rsec=regcred_ parameters defined\).
+
+To generate the spec file, head on to the below URLs for the PX release you wish to use.
+
+* [1.4 Tech Preview](https://install.portworx.com/1.4/).
+* [1.3 Stable](https://install.portworx.com/1.3/).
+
+Alternately, you can use curl to generate the spec as described in [Generating Portworx Kubernetes spec using curl](https://docs.portworx.com/scheduler/kubernetes/px-k8s-spec-curl.html).
+
+**Secure ETCD and Certificates**
+
+If using secure etcd provide “https” in the URL and make sure all the certificates are in the _/etc/pwx/_ directory on each host which is bind mounted inside PX container.
+
+**Using Secrets to Provision Certificates**
+
+It is recommended to use Kubernetes Secrets to provide ETCD certificates to Portworx. This way, the certificates will be automatically mounted when new nodes join the cluster.
+
+Copy all your etcd certificates and key in a folder _etcd-secrets/_ to create a Kubernetes secret from it.
+
+```text
+# ls etcd-secrets
+etcd-ca etcd-cert   etcd-key
+```
+
+Use `kubectl` to create the secret named `px-etcd-certs` from the above files:
+
+```text
+# kubectl -n kube-system create secret generic px-etcd-certs --from-file=etcd-secrets/
+```
+
+Now edit the Portworx spec file to reference the certificates. Given the names of the files are `etcd-ca`, `etcd-cert` and `etcd-key`, modify the _volumeMounts_ and _volumes_ sections as follows:
+
+```text
+  volumeMounts:
+  - mountPath: /etc/pwx/etcdcerts
+    name: etcdcerts
+```
+
+```text
+  volumes:
+  - name: etcdcerts
+    secret:
+      secretName: px-etcd-certs
+      items:
+      - key: etcd-ca
+        path: pwx-etcd-ca.crt
+      - key: etcd-cert
+        path: pwx-etcd-cert.crt
+      - key: etcd-key
+        path: pwx-etcd-key.key
+```
+
+Now that the certificates are mounted at `/etc/pwx/etcdcerts`, change the portworx container args to use the correct certificate paths:
+
+```text
+  containers:
+  - name: portworx
+    args:
+      ["-c", "test-cluster", "-a", "-f",
+      "-ca", "/etc/pwx/etcdcerts/pwx-etcd-ca.crt",
+      "-cert", "/etc/pwx/etcdcerts/pwx-etcd-cert.crt",
+      "-key", "/etc/pwx/etcdcerts/pwx-etcd-key.key",
+      "-x", "kubernetes"]
+```
+
+**Installing behind the HTTP proxy**
+
+During the installation Portworx may require access to the Internet, to fetch kernel headers if they are not available locally on the host system. If your cluster runs behind the HTTP proxy, you will need to expose _PX\_HTTP\_PROXY_and/or _PX\_HTTPS\_PROXY_ environment variables to point to your HTTP proxy when starting the DaemonSet.
+
+Use _e=PX\_HTTP\_PROXY=&lt;http-proxy&gt;,PX\_HTTPS\_PROXY=&lt;https-proxy&gt;_ query param when generating the DaemonSet spec.
+
+#### Apply the spec {#apply-the-spec}
+
+> **Note:**  
+> Openshift Container Platform 3.9 started restricting where Daemonsets can install \(see [reference](https://docs.openshift.com/container-platform/3.9/dev_guide/daemonsets.html)\), which will prevent the installation of Portworx Daemonset. To enable Daemonsets on “kube-system” namespace run: `oc patch namespace kube-system -p '{"metadata": {"annotations": {"openshift.io/node-selector": ""}}}'`  
+> Alternatively, add the following label to the individual nodes where you want Portworx to run: `oc label nodes mynode1 node-role.kubernetes.io/compute=true`
+
+Once you have generated the spec file, deploy Portworx.
+
+```text
+oc apply -f px-spec.yaml
+```
+
+Monitor the portworx pods
+
+```text
+kubectl get pods -o wide -n kube-system -l name=portworx
+```
+
+Monitor Portworx cluster status
+
+```text
+PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}')
+kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status
+```
+
+If you are still experiencing issues, please refer to [Troubleshooting PX on Kubernetes](https://docs.portworx.com/scheduler/kubernetes/support.html) and [General FAQs](https://docs.portworx.com/knowledgebase/faqs.html).
+
+### Deploy a sample application {#deploy-a-sample-application}
+
+We will test if the installation was successful using a persistent mysql deployment.
+
+* Create a Portworx StorageClass by applying following spec:
+
+```text
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+    name: px-demo-sc
+provisioner: kubernetes.io/portworx-volume
+parameters:
+   repl: "3"
+```
+
+* Log into Openshift console: https://MASTER-IP:8443/console
+* Create a new project “hello-world”.
+* Import and deploy [this mysql application template](https://docs.portworx.com/k8s-samples/px-mysql-openshift.json?raw=true)
+  * For _STORAGE\_CLASS\_NAME_, we use the storage class _px-demo-sc_ created in step before.
+* Verify mysql deployment is active.
+
+You can find other examples at [applications using Portworx on Kubernetes](https://docs.portworx.com/scheduler/kubernetes/k8s-px-app-samples.html).  
 {% endtab %}
 {% endtabs %}
 

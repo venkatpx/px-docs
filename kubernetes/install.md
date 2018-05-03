@@ -7,11 +7,7 @@ keywords: >-
 sidebar: home_sidebar
 ---
 
-# Install Portworx on Kubernetes
-
-* TOC
-
-  {:toc}
+# Install
 
 Portworx can run alongside Kubernetes and provide Persistent Volumes to other applications running on Kubernetes. This section describes how to deploy PX within a Kubernetes cluster and have PX provide highly available volumes to any application deployed via Kubernetes.
 

@@ -1,6 +1,6 @@
 # Table of contents
 
-* [README](README.md)
+* [Install Portworx on Kubernetes](README.md)
 * Portworx on Kubernetes
   * [snaps](kubernetes/snaps.md)
   * [statefulsets](kubernetes/statefulsets.md)
@@ -9,7 +9,7 @@
   * [dynamic-provisioning](kubernetes/dynamic-provisioning.md)
   * [Using scheduler convergence](kubernetes/using-scheduler-convergence.md)
   * [Failover MYSQL Pod to a different node](kubernetes/failover-mysql-pod-to-a-different-node.md)
-  * [install](kubernetes/install.md)
+  * [Install](kubernetes/install.md)
 * Other schedulers
   * [rancher](video/rancher.md)
   * [dcos](video/dcos.md)

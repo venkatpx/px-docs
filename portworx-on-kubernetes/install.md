@@ -7,7 +7,7 @@ keywords: >-
 sidebar: home_sidebar
 ---
 
-# Install Portworx on Kubernetes
+# install
 
 * TOC
 
